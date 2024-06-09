@@ -1,0 +1,68 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--<Import Project="$(MSBuildThisFileDirectory)XenoAtom.ShaderCompiler.targets" />-->
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <IsPackable>true</IsPackable>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <PublishAot>true</PublishAot>
+    <!-- Enable AOT analyzers -->
+    <IsAotCompatible>true</IsAotCompatible>
+    <DefineConstants>$(DefineConstants);SHADER_COMPILER_RUNTIME</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Description>This is a default project description</Description>
+    <Copyright>Alexandre Mutel</Copyright>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <Authors>Alexandre Mutel</Authors>
+    <PackageTags>tag1;tag2;tag3</PackageTags>
+    <PackageReadmeFile>readme.md</PackageReadmeFile>
+    <PackageIcon>XenoAtom.ShaderCompiler.png</PackageIcon>
+    <PackageProjectUrl>https://github.com/xoofx/XenoAtom.ShaderCompiler</PackageProjectUrl>
+    <PackageLicenseExpression>BSD-2-Clause</PackageLicenseExpression>
+    <!--Add support for sourcelink-->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Test.vert.hlsl" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)../../img/XenoAtom.ShaderCompiler.png" Pack="true" PackagePath="/" />
+    <None Include="$(MSBuildThisFileDirectory)../../readme.md" Pack="true" PackagePath="/" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="MinVer" Version="5.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Silk.NET.Shaderc.Native" Version="2.21.0" />
+    <PackageReference Include="System.IO.Hashing" Version="8.0.0" />
+    <PackageReference Include="XenoAtom.CommandLine" Version="1.0.1" />
+    <PackageReference Include="XenoAtom.Interop.libshaderc" Version="1.0.0-alpha.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <VulkanHLSLShader Include="Test.vert.hlsl">
+      <Variations>default;v1=-DMACRO1;v2=-DMACRO2</Variations>
+    </VulkanHLSLShader>
+
+    <!--<VulkanHLSLShader Include="Test_special_variation.vert.hlsl">
+      <HintPath>Test.vert.hlsl</HintPath>
+      --><!--<FullPath>$(MSBuildThisFileDirectory)Test.vert.hlsl</FullPath>--><!--
+    </VulkanHLSLShader>-->
+
+  </ItemGroup>
+</Project>

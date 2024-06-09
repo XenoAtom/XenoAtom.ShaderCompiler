@@ -1,0 +1,201 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- ****************************************************************************  -->
+  <!-- Predefined properties -->
+  <!-- ****************************************************************************  -->
+  <PropertyGroup>
+    <ShaderCompilerOption_root_namespace Condition="'$(ShaderCompilerOption_root_namespace)' == ''">$(RootNamespace)</ShaderCompilerOption_root_namespace>
+    <ShaderCompilerOption_class_name Condition="'$(ShaderCompilerOption_class_name)' == ''">CompiledShaders</ShaderCompilerOption_class_name>
+    <ShaderCompilerOption_class_name>$(ShaderCompilerOption_class_name.TrimEnd('/'))</ShaderCompilerOption_class_name>
+    <ShaderCompilerOption_output_kind Condition="'$(ShaderCompilerOption_output_kind)' == '' AND '$(Language)'=='C#'">csharp</ShaderCompilerOption_output_kind>
+    <ShaderCompilerOption_output_kind Condition="'$(ShaderCompilerOption_output_kind)' == ''">content</ShaderCompilerOption_output_kind>
+    <!-- Enable default ShaderCompile globbings -->
+    <EnableDefaultShaderCompileItems Condition="'$(EnableDefaultShaderCompileItems)' == ''">true</EnableDefaultShaderCompileItems>
+    <!-- vert
+         vert.hlsl
+         frag
+         frag.hlsl
+         comp
+         comp.hlsl
+         geom
+         geom.hlsl
+         tesc
+         tesc.hlsl
+         tese
+         tese.hlsl -->
+    <ShaderCompileDefaultExtensions Condition="'$(ShaderCompileDefaultExtensions)' == ''">**/*.vert;**/*.vert.hlsl;**/*.frag;**/*.frag.hlsl;**/*.comp;**/*.comp.hlsl;**/*.geom;**/*.geom;**/*.geom.hlsl;**/*.tesc;**/*.tesc.hlsl;**/*.tese;**/*.tese.hlsl</ShaderCompileDefaultExtensions>
+    <ShaderCompileCustomExtensions Condition="'$(ShaderCompileDefaultExtensions)' == ''"></ShaderCompileCustomExtensions>
+    <_ShaderCompileDefaultExtensions>$(ShaderCompileDefaultExtensions);$(ShaderCompileCustomExtensions)</_ShaderCompileDefaultExtensions>
+
+    <_ShaderCompilerOutputDirectoryName>ShaderCompiler</_ShaderCompilerOutputDirectoryName>
+    <_ShaderCompilerOutputDirectory>$(ProjectDir)$(IntermediateOutputPath)$(_ShaderCompilerOutputDirectoryName)\</_ShaderCompilerOutputDirectory>
+    <_ShaderCompilerOutputCSharpDirectory>$(_ShaderCompilerOutputDirectory)cs\</_ShaderCompilerOutputCSharpDirectory>
+    <_ShaderCompilerOutputMarkerFile>$(_ShaderCompilerOutputDirectory)ShaderCompiler_output.txt</_ShaderCompilerOutputMarkerFile>
+    <_ShaderCompilerOutputBatchFile>$(_ShaderCompilerOutputDirectory)ShaderCompile_input.json</_ShaderCompilerOutputBatchFile>
+  </PropertyGroup>
+
+  <!-- Globbings for shader extensions -->
+  <ItemGroup Condition=" '$(EnableDefaultItems)' == 'true' ">
+    <ShaderCompile Include="$(_ShaderCompileDefaultExtensions)" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" Condition=" '$(EnableDefaultShaderCompileItems)' == 'true' " />
+  </ItemGroup>
+
+  <!-- Globbings for removing shader extensions for None -->
+  <ItemGroup Condition=" '$(EnableDefaultItems)' == 'true' And '$(EnableDefaultNoneItems)' == 'true' ">
+    <None Remove="$(_ShaderCompileDefaultExtensions)" Condition=" '$(EnableDefaultShaderCompileItems)' == 'true' "/>
+  </ItemGroup>
+
+  <!-- Setup binaries for test project vs real user project -->
+  <Choose>
+    <When Condition="'$(ShaderCompilerTestProject)' == 'true'">
+      <PropertyGroup>
+        <!-- Location of assembleis when testing from Projects/ in the XenoAtom.ShaderCompiler.Tests -->
+        <_ShaderCompilerAssemblyTaskDll>$(MSBuildThisFileDirectory)XenoAtom.ShaderCompiler.Tasks.dll</_ShaderCompilerAssemblyTaskDll>
+        <_ShaderCompilerMainDll>$(MSBuildThisFileDirectory)dotnet-shaderc.dll</_ShaderCompilerMainDll>
+        <_ShaderCompilerDll>$(MSBuildThisFileDirectory)XenoAtom.ShaderCompiler.dll</_ShaderCompilerDll>
+      </PropertyGroup>
+      <ItemGroup>
+        <Analyzer Include="$(MSBuildThisFileDirectory)XenoAtom.ShaderCompiler.SourceGen.dll" />
+      </ItemGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <_ShaderCompilerAssemblyTaskDll>$(MSBuildThisFileDirectory)tasks/XenoAtom.ShaderCompiler.Tasks.dll</_ShaderCompilerAssemblyTaskDll>
+        <_ShaderCompilerMainDll>$(MSBuildThisFileDirectory)bin/dotnet-shaderc.dll</_ShaderCompilerMainDll>
+        <_ShaderCompilerDll>$(MSBuildThisFileDirectory)bin/XenoAtom.ShaderCompiler.dll</_ShaderCompilerDll>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
+  <!-- ****************************************************************************  -->
+  <!-- Predefined metadata for ShaderCompile -->
+  <!-- ****************************************************************************  -->
+  <ItemDefinitionGroup>
+    <ShaderCompile Condition="'$(Language)'=='C#'">
+      <ShaderCompile_SourceGenerator>true</ShaderCompile_SourceGenerator>
+    </ShaderCompile>
+  </ItemDefinitionGroup>
+
+  <!-- ****************************************************************************  -->
+  <!-- Predefined items for ShaderCompile-->
+  <!-- ****************************************************************************  -->
+  <ItemGroup>
+    <!-- Defines the ShaderCompile item-->
+    <PropertyPageSchema Include="$(MSBuildThisFileDirectory)XenoAtom.ShaderCompiler.Build.xaml"/>
+
+    <!-- Defines the Properties view for ShaderCompile item -->
+    <PropertyPageSchema Include="$(MSBuildThisFileDirectory)ShaderCompiler.xaml">
+      <Context>File;BrowseObject</Context>
+    </PropertyPageSchema>
+    <AvailableItemName Include="ShaderCompile">
+      <Targets>ShaderCompile</Targets>
+    </AvailableItemName>
+
+    <!-- Fake output file to force running ShaderCompileRetrieveDependencies -->
+    <UpToDateCheckOutput Include="__ShaderCompiler__force__run" />
+
+    <!-- Metadata that we pass from MSBuild to Roslyn Source Generator -->
+    <CompilerVisibleProperty Include="ShaderCompilerOption_root_namespace" />
+    <CompilerVisibleProperty Include="ShaderCompilerOption_class_name" />
+    <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="ShaderCompile_SourceGenerator"/>
+    <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="ShaderCompile_PathCSharp"/>
+    <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="ShaderCompile_RelativePathCSharp"/>
+
+    <_ShaderCompile_CSharpFile Include="@(ShaderCompile)">
+      <!--The link is used to workaround an issue that shows otherwise empty folders from obj/-->
+      <Link>%(RelativeDir)%(Filename)%(Extension).cs</Link>
+      <ShaderCompile_RelativePathCSharp>%(RelativeDir)%(Filename)%(Extension).cs</ShaderCompile_RelativePathCSharp>
+      <ShaderCompile_PathCSharp>$(_ShaderCompilerOutputCSharpDirectory)%(RelativeDir)%(Filename)%(Extension).cs</ShaderCompile_PathCSharp>
+    </_ShaderCompile_CSharpFile>
+
+    <!-- Create additional files items used by the Roslyn Source Generator -->
+    <AdditionalFiles Include="@(_ShaderCompile_CSharpFile)" Visible="false"/>
+  </ItemGroup>
+
+  <!-- ****************************************************************************  -->
+  <!-- Targets for ShaderCompile -->
+  <!-- ****************************************************************************  -->
+  <UsingTask AssemblyFile="$(_ShaderCompilerAssemblyTaskDll)" TaskName="XenoAtom.ShaderCompiler.Tasks.ShaderCompileTask" />
+  <UsingTask AssemblyFile="$(_ShaderCompilerAssemblyTaskDll)" TaskName="XenoAtom.ShaderCompiler.Tasks.ShaderInitializeTask" />
+
+  <!-- This targets retrieves the input dependencies from previous run and creates the $(_ShaderCompilerOutputBatchFile) json batch file used by ShaderCompile target-->
+  <Target
+    Name="ShaderCompileRetrieveDependencies"
+    Condition="'@(ShaderCompile)' != ''"
+    Inputs="@(ShaderCompile)"
+    Outputs="__ShaderCompiler__force__run"
+  >
+    <!--<Message Importance="High" Text="Reading @(ShaderCompile)"/>-->
+
+    <ShaderInitializeTask
+      CacheDirectory="$(_ShaderCompilerOutputDirectory)"
+      CacheCSharpDirectory ="$(_ShaderCompilerOutputCSharpDirectory)"
+      BatchFile="$(_ShaderCompilerOutputBatchFile)"
+      InputShaderFiles="@(ShaderCompile)"
+
+      ShaderCompilerOption_root_namespace="$(ShaderCompilerOption_root_namespace)"
+      ShaderCompilerOption_class_name="$(ShaderCompilerOption_class_name)"
+      ShaderCompilerOption_output_kind="$(ShaderCompilerOption_output_kind)"
+      ShaderCompilerOption_stage_selection = "$(ShaderCompilerOption_stage_selection)"
+      ShaderCompilerOption_entry_point = "$(ShaderCompilerOption_entry_point)"
+      ShaderCompilerOption_source_language = "$(ShaderCompilerOption_source_language)"
+      ShaderCompilerOption_optimization_level = "$(ShaderCompilerOption_optimization_level)"
+      ShaderCompilerOption_invert_y = "$(ShaderCompilerOption_invert_y)"
+      ShaderCompilerOption_target_env = "$(ShaderCompilerOption_target_env)"
+      ShaderCompilerOption_shader_stage = "$(ShaderCompilerOption_shader_stage)"
+      ShaderCompilerOption_target_spv = "$(ShaderCompilerOption_target_spv)"
+      ShaderCompilerOption_generate_debug = "$(ShaderCompilerOption_generate_debug)"
+      ShaderCompilerOption_hlsl_16bit_types = "$(ShaderCompilerOption_hlsl_16bit_types)"
+      ShaderCompilerOption_hlsl_offsets = "$(ShaderCompilerOption_hlsl_offsets)"
+      ShaderCompilerOption_hlsl_functionality1 = "$(ShaderCompilerOption_hlsl_functionality1)"
+      ShaderCompilerOption_auto_map_locations = "$(ShaderCompilerOption_auto_map_locations)"
+      ShaderCompilerOption_auto_bind_uniforms = "$(ShaderCompilerOption_auto_bind_uniforms)"
+      ShaderCompilerOption_hlsl_iomap = "$(ShaderCompilerOption_hlsl_iomap)"
+      ShaderCompilerOption_defines = "$(ShaderCompilerOption_defines)"
+      >
+      <Output TaskParameter="OutputCompiledShaders" ItemName="ShaderCompileOutput" />
+      <Output TaskParameter="ContentFiles" ItemName="ShaderContentFiles" />
+    </ShaderInitializeTask>
+
+    <!-- Create content items returned by the initialize task -->
+    <ItemGroup Condition="'@(ShaderContentFiles)' != ''">
+      <Content Include="@(ShaderContentFiles)">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
+    <!-- Create file writes to track the batch file so that it will be cleaned up on clean -->
+    <ItemGroup>
+      <_ShaderCompile_IncludeDependencies Include="%(ShaderCompileOutput.ShaderCompile_IncludeDependencies)"/>
+      <FileWrites Include="$(_ShaderCompilerOutputBatchFile)"/>
+    </ItemGroup>
+
+    <!--<Message Importance="High" Text="ShaderCompileOutput %(ShaderCompileOutput.Identity) %(ShaderCompileOutput.ShaderCompile_PathDeps) %(ShaderCompileOutput.ShaderCompile_IncludeDependencies)"/>-->
+  </Target>
+
+  <!-- This targets compiles shader files based on the $(_ShaderCompilerOutputBatchFile) json batch file -->
+  <Target
+    Name="ShaderCompile"
+    Condition="'@(ShaderCompile)' != ''"
+    Inputs="$(_ShaderCompilerAssemblyTaskDll);$(_ShaderCompilerMainDll);$(_ShaderCompilerDll);@(_ShaderCompile_IncludeDependencies);$(_ShaderCompilerOutputBatchFile);@(ShaderCompile)"
+    Outputs="$(_ShaderCompilerOutputMarkerFile)"
+    DependsOnTargets="ShaderCompileRetrieveDependencies"
+    BeforeTargets="PreBuildEvent"
+    >
+    <!-- We plug before PreBuildEvent as PrepareForBuild is supposed to create intermediate folders -->
+
+    <Message Importance="High" Text="ShaderCompiler running on @(ShaderCompileOutput)"/>
+
+    <ShaderCompileTask
+      BatchFile="$(_ShaderCompilerOutputBatchFile)"
+      ShaderCompilerPath="$(_ShaderCompilerMainDll)"
+      ShaderCompilerOutputMarkerFile = "$(_ShaderCompilerOutputMarkerFile)"
+      />
+
+    <ItemGroup>
+      <FileWrites Include="$(_ShaderCompilerOutputMarkerFile)"/>
+      <FileWrites Include="@(ShaderCompileOutput)"/>
+      <FileWrites Include="@(ShaderCompileOutput->'%(ShaderCompile_PathDeps)')"/>
+    </ItemGroup>
+  </Target>
+
+</Project>

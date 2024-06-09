@@ -1,0 +1,90 @@
+<Project Sdk="Microsoft.Build.NoTargets/3.7.0">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <IsPackable>true</IsPackable>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PackageId>XenoAtom.ShaderCompiler.Build</PackageId>
+    <Description>Package providing an integration of shaderc compiler into MSBuild for compiling all your GLSL/HLSL files to SPIR-V.</Description>
+    <Copyright>Alexandre Mutel</Copyright>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <Authors>Alexandre Mutel</Authors>
+    <PackageTags>glslc;shaderc;glsl;hlsl;spirv;vulkan;opengl</PackageTags>
+    <PackageReadmeFile>readme.md</PackageReadmeFile>
+    <PackageIcon>XenoAtom.ShaderCompiler.png</PackageIcon>
+    <PackageProjectUrl>https://github.com/XenoAtom/XenoAtom.ShaderCompiler</PackageProjectUrl>
+    <PackageLicenseExpression>BSD-2-Clause</PackageLicenseExpression>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <!-- Make sure that we use our custom target to package the Roslyn Source Generator, the tasks and the compiler. -->
+    <BeforePack>PrepareShaderCompilerBuildFolder</BeforePack>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)../../img/XenoAtom.ShaderCompiler.png" Pack="true" PackagePath="/" />
+    <None Include="readme.md" Pack="true" PackagePath="/" />
+    <None Include="global.json" Pack="true" PackagePath="/build/bin" />
+    <None Include="XenoAtom.ShaderCompiler.Build.targets" Pack="true" PackagePath="/build" />
+    <None Include="XenoAtom.ShaderCompiler.Build.xaml" Pack="true" PackagePath="/build" />
+    <None Include="ShaderCompiler.xaml" Pack="true" PackagePath="/build" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="MinVer" Version="5.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ShaderProjectToReference Include="..\dotnet-shaderc\dotnet-shaderc.csproj">
+      <OutputDir>build/bin</OutputDir>
+    </ShaderProjectToReference>
+
+    <ShaderProjectToReference Include="..\XenoAtom.ShaderCompiler.Tasks\XenoAtom.ShaderCompiler.Tasks.csproj">
+      <OutputDir>build/tasks</OutputDir>
+    </ShaderProjectToReference>
+
+    <ShaderProjectToReference Include="..\XenoAtom.ShaderCompiler.SourceGen\XenoAtom.ShaderCompiler.SourceGen.csproj">
+      <OutputDir>analyzers/dotnet/cs</OutputDir>
+    </ShaderProjectToReference>
+
+    <!-- Fake dependency to avoid concurrent build with target PrepareShaderCompilerBuildFolder -->
+    <ProjectReference Include="@(ShaderProjectToReference)">
+      <Private>False</Private>
+      <CopyLocalSatelliteAssemblies>False</CopyLocalSatelliteAssemblies>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  
+  <!-- This target is packaging the dotnet tool dotnet-shaderc right into this package to avoid users having an additional installation step into their MSBuild project -->
+  <Target Name="PrepareShaderCompilerBuildFolder"
+    Inputs="@(ShaderProjectToReference)"
+    Outputs="$(IntermediateOutputPath)PackageDependency/%(ShaderProjectToReference.OutputDir)/__force_always_run__">
+    
+    <PropertyGroup>
+      <_BuildDirName>%(ShaderProjectToReference.OutputDir)</_BuildDirName>
+      <_BuildDir>$(IntermediateOutputPath)PackageDependency/%(ShaderProjectToReference.OutputDir)/</_BuildDir>
+    </PropertyGroup>
+
+    <Message Importance="high" Text="Building %(ShaderProjectToReference.Identity) into $(_BuildDir)" />
+
+    <!--<Message Importance="high" Text="Building %(ShaderProjectToReference.Identity) into $(_BuildDir)" />-->
+    <!-- We actually perform a publish of dotnet-shaderc into build/bin folder -->
+    <RemoveDir Directories="$(_BuildDir)" />
+    <Exec Command="dotnet publish -c Release %(ShaderProjectToReference.FullPath) --output $(_BuildDir)/" />
+    <!-- Remove extras files not required for packaging the NuGet package -->
+    <ItemGroup>
+      <_FilesToDelete Include="$(_BuildDir)*.pdb" />
+      <_FilesToDelete Include="$(_BuildDir)*.exe" />
+    </ItemGroup>
+    <Delete Files="@(_FilesToDelete)" />
+    <!-- Create the content of the package here -->
+    <ItemGroup>
+      <_ItemToPack Include="$(_BuildDir)**/*.*">
+        <PackagePath>/$(_BuildDirName)/%(RelativeDir)%(Filename)%(Extension)</PackagePath>
+        <Pack>true</Pack>
+      </_ItemToPack>
+      <None Include="@(_ItemToPack)" />
+    </ItemGroup>
+
+    <!--<Message Importance="high" Text="Packaging %(_ItemToPack.FullPath) %(_ItemToPack.PackagePath)" />-->    
+  </Target>
+</Project>

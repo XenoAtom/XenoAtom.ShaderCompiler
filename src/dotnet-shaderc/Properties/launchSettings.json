@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "dotnet-shaderc": {
+      "commandName": "Project",
+      "commandLineArgs": "--batch \"C:\\code\\XenoAtom\\XenoAtom.ShaderCompiler\\src\\XenoAtom.ShaderCompiler.Tests\\obj\\Debug\\net8.0\\ShaderCompiler\\ShaderCompiler.json\""
+    }
+  }
+}

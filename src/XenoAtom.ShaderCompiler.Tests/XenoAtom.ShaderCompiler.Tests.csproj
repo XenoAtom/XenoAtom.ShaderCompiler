@@ -1,0 +1,49 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <EnableMSTestRunner>true</EnableMSTestRunner>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Projects\**\*.*" />
+    <Content Include="Projects\**\*.*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+
+    <Content Include="..\XenoAtom.ShaderCompiler.Build\XenoAtom.ShaderCompiler.Build.targets">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>XenoAtom.ShaderCompiler.Build.targets</Link>
+      <Visible>false</Visible>
+    </Content>
+    <Content Include="..\XenoAtom.ShaderCompiler.Build\XenoAtom.ShaderCompiler.Build.xaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>XenoAtom.ShaderCompiler.Build.xaml</Link>
+      <Visible>false</Visible>
+    </Content>
+    <Content Include="..\XenoAtom.ShaderCompiler.Build\ShaderCompiler.xaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>ShaderCompiler.xaml</Link>
+      <Visible>false</Visible>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Build" Version="17.10.4" ExcludeAssets="runtime" />
+    <PackageReference Include="Microsoft.Build.Locator" Version="1.7.8" />
+    <PackageReference Include="MSTest" Version="3.*" />
+    <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\dotnet-shaderc\dotnet-shaderc.csproj" />
+    <ProjectReference Include="..\XenoAtom.ShaderCompiler.SourceGen\XenoAtom.ShaderCompiler.SourceGen.csproj" />
+    <ProjectReference Include="..\XenoAtom.ShaderCompiler.Tasks\XenoAtom.ShaderCompiler.Tasks.csproj" />
+    <ProjectReference Include="..\XenoAtom.ShaderCompiler\XenoAtom.ShaderCompiler.csproj" />
+  </ItemGroup>
+
+</Project>

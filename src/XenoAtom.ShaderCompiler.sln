@@ -1,0 +1,73 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XenoAtom.ShaderCompiler", "XenoAtom.ShaderCompiler\XenoAtom.ShaderCompiler.csproj", "{81750B46-D768-4220-9D50-95756D6215D7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XenoAtom.ShaderCompiler.Tests", "XenoAtom.ShaderCompiler.Tests\XenoAtom.ShaderCompiler.Tests.csproj", "{6FA8E662-F920-44CE-8FBA-ECCD160AFD54}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BBC4B16D-083F-47E6-BFAE-9064E600F230}"
+	ProjectSection(SolutionItems) = preProject
+		..\.editorconfig = ..\.editorconfig
+		..\.gitattributes = ..\.gitattributes
+		..\.gitignore = ..\.gitignore
+		..\.github\workflows\ci.yml = ..\.github\workflows\ci.yml
+		dotnet-releaser.toml = dotnet-releaser.toml
+		global.json = global.json
+		..\license.txt = ..\license.txt
+		..\readme.md = ..\readme.md
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dotnet-shaderc", "dotnet-shaderc\dotnet-shaderc.csproj", "{06F90F03-FA3B-4593-A0A0-D5FCCF090CBE}"
+EndProject
+Project("{13B669BE-BB05-4DDF-9536-439F39A36129}") = "XenoAtom.ShaderCompiler.Build", "XenoAtom.ShaderCompiler.Build\XenoAtom.ShaderCompiler.Build.msbuildproj", "{FFB0BE5E-D675-4DF3-A882-604E0BDB430C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XenoAtom.ShaderCompiler.Tasks", "XenoAtom.ShaderCompiler.Tasks\XenoAtom.ShaderCompiler.Tasks.csproj", "{0FFBD042-A130-47CF-B9BA-3DCDF96EC903}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XenoAtom.ShaderCompiler.SourceGen", "XenoAtom.ShaderCompiler.SourceGen\XenoAtom.ShaderCompiler.SourceGen.csproj", "{D6E8F1BC-1F19-4A9B-B82E-6D8D491DCD35}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XenoAtom.ShaderCompiler.Bench", "XenoAtom.ShaderCompiler.Bench\XenoAtom.ShaderCompiler.Bench.csproj", "{A74576D6-10DA-448D-ADE9-2F92AF409A85}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{81750B46-D768-4220-9D50-95756D6215D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81750B46-D768-4220-9D50-95756D6215D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81750B46-D768-4220-9D50-95756D6215D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81750B46-D768-4220-9D50-95756D6215D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6FA8E662-F920-44CE-8FBA-ECCD160AFD54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6FA8E662-F920-44CE-8FBA-ECCD160AFD54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6FA8E662-F920-44CE-8FBA-ECCD160AFD54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6FA8E662-F920-44CE-8FBA-ECCD160AFD54}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06F90F03-FA3B-4593-A0A0-D5FCCF090CBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06F90F03-FA3B-4593-A0A0-D5FCCF090CBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06F90F03-FA3B-4593-A0A0-D5FCCF090CBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06F90F03-FA3B-4593-A0A0-D5FCCF090CBE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFB0BE5E-D675-4DF3-A882-604E0BDB430C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFB0BE5E-D675-4DF3-A882-604E0BDB430C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFB0BE5E-D675-4DF3-A882-604E0BDB430C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFB0BE5E-D675-4DF3-A882-604E0BDB430C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0FFBD042-A130-47CF-B9BA-3DCDF96EC903}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0FFBD042-A130-47CF-B9BA-3DCDF96EC903}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0FFBD042-A130-47CF-B9BA-3DCDF96EC903}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0FFBD042-A130-47CF-B9BA-3DCDF96EC903}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6E8F1BC-1F19-4A9B-B82E-6D8D491DCD35}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6E8F1BC-1F19-4A9B-B82E-6D8D491DCD35}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6E8F1BC-1F19-4A9B-B82E-6D8D491DCD35}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6E8F1BC-1F19-4A9B-B82E-6D8D491DCD35}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A74576D6-10DA-448D-ADE9-2F92AF409A85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A74576D6-10DA-448D-ADE9-2F92AF409A85}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A74576D6-10DA-448D-ADE9-2F92AF409A85}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A74576D6-10DA-448D-ADE9-2F92AF409A85}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {95E8F3B3-49E8-400E-97A1-38D8B946DFCA}
+	EndGlobalSection
+EndGlobal

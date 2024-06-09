@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <OutputType>Library</OutputType>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+
+    <!-- Disable shared compilation for our tests to avoid having a VBCSCompiler around-->
+    <UseSharedCompilation>false</UseSharedCompilation>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ShaderCompilerTestProject>true</ShaderCompilerTestProject>
+    <CustomBeforeDirectoryBuildTargets>$(MSBuildThisFileDirectory)../XenoAtom.ShaderCompiler.Build.targets</CustomBeforeDirectoryBuildTargets>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "XenoAtom.ShaderCompiler.Tests": {
+      "commandName": "Project"
+    },
+    "Profile 1": {
+      "commandName": "Project"
+    }
+  }
+}

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ProjectSchemaDefinitions xmlns="http://schemas.microsoft.com/build/2009/properties">
+  <ItemType Name="ShaderCompile" DisplayName="Shader Compiler" />
+  <ContentType Name="ShaderCompile" ItemType="ShaderCompile" DisplayName="Shader Compiler" />
+  <FileExtension Name=".vert" ContentType="ShaderCompile" />
+  <FileExtension Name=".frag" ContentType="ShaderCompile" />
+  <FileExtension Name=".tesc" ContentType="ShaderCompile" />
+  <FileExtension Name=".tese" ContentType="ShaderCompile" />
+  <FileExtension Name=".geom" ContentType="ShaderCompile" />
+  <FileExtension Name=".comp" ContentType="ShaderCompile" />
+  <FileExtension Name=".vert.hlsl" ContentType="ShaderCompile" />
+  <FileExtension Name=".frag.hlsl" ContentType="ShaderCompile" />
+  <FileExtension Name=".tesc.hlsl" ContentType="ShaderCompile" />
+  <FileExtension Name=".tese.hlsl" ContentType="ShaderCompile" />
+  <FileExtension Name=".geom.hlsl" ContentType="ShaderCompile" />
+  <FileExtension Name=".comp.hlsl" ContentType="ShaderCompile" />
+</ProjectSchemaDefinitions>
