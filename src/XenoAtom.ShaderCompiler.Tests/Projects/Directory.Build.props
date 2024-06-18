@@ -16,4 +16,6 @@
     <ShaderCompilerTestProject>true</ShaderCompilerTestProject>
     <CustomBeforeDirectoryBuildTargets>$(MSBuildThisFileDirectory)../XenoAtom.ShaderCompiler.Build.targets</CustomBeforeDirectoryBuildTargets>
   </PropertyGroup>
+
+  <Import Project="$(MSBuildThisFileDirectory)../XenoAtom.ShaderCompiler.Build.props"/>
 </Project>

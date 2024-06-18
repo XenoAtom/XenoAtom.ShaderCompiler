@@ -34,16 +34,6 @@
     <_ShaderCompilerOutputBatchFile>$(_ShaderCompilerOutputDirectory)ShaderCompile_input.json</_ShaderCompilerOutputBatchFile>
   </PropertyGroup>
 
-  <!-- Globbings for shader extensions -->
-  <ItemGroup Condition=" '$(EnableDefaultItems)' == 'true' ">
-    <ShaderCompile Include="$(_ShaderCompileDefaultExtensions)" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" Condition=" '$(EnableDefaultShaderCompileItems)' == 'true' " />
-  </ItemGroup>
-
-  <!-- Globbings for removing shader extensions for None -->
-  <ItemGroup Condition=" '$(EnableDefaultItems)' == 'true' And '$(EnableDefaultNoneItems)' == 'true' ">
-    <None Remove="$(_ShaderCompileDefaultExtensions)" Condition=" '$(EnableDefaultShaderCompileItems)' == 'true' "/>
-  </ItemGroup>
-
   <!-- Setup binaries for test project vs real user project -->
   <Choose>
     <When Condition="'$(ShaderCompilerTestProject)' == 'true'">
@@ -67,29 +57,9 @@
   </Choose>
 
   <!-- ****************************************************************************  -->
-  <!-- Predefined metadata for ShaderCompile -->
-  <!-- ****************************************************************************  -->
-  <ItemDefinitionGroup>
-    <ShaderCompile Condition="'$(Language)'=='C#'">
-      <ShaderCompile_SourceGenerator>true</ShaderCompile_SourceGenerator>
-    </ShaderCompile>
-  </ItemDefinitionGroup>
-
-  <!-- ****************************************************************************  -->
-  <!-- Predefined items for ShaderCompile-->
+  <!-- Predefined items for Roslyn Source Generator / AdditionalFiles -->
   <!-- ****************************************************************************  -->
   <ItemGroup>
-    <!-- Defines the ShaderCompile item-->
-    <PropertyPageSchema Include="$(MSBuildThisFileDirectory)XenoAtom.ShaderCompiler.Build.xaml"/>
-
-    <!-- Defines the Properties view for ShaderCompile item -->
-    <PropertyPageSchema Include="$(MSBuildThisFileDirectory)ShaderCompiler.xaml">
-      <Context>File;BrowseObject</Context>
-    </PropertyPageSchema>
-    <AvailableItemName Include="ShaderCompile">
-      <Targets>ShaderCompile</Targets>
-    </AvailableItemName>
-
     <!-- Fake output file to force running ShaderCompileRetrieveDependencies -->
     <UpToDateCheckOutput Include="__ShaderCompiler__force__run" />
 

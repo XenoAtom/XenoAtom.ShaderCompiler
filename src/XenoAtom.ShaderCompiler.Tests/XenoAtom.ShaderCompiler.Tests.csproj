@@ -20,6 +20,11 @@
       <Link>XenoAtom.ShaderCompiler.Build.targets</Link>
       <Visible>false</Visible>
     </Content>
+    <Content Include="..\XenoAtom.ShaderCompiler.Build\XenoAtom.ShaderCompiler.Build.props">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>XenoAtom.ShaderCompiler.Build.props</Link>
+      <Visible>false</Visible>
+    </Content>
     <Content Include="..\XenoAtom.ShaderCompiler.Build\XenoAtom.ShaderCompiler.Build.xaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Link>XenoAtom.ShaderCompiler.Build.xaml</Link>

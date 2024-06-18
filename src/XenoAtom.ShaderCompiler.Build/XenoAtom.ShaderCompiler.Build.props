@@ -1,0 +1,38 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- ****************************************************************************  -->
+  <!-- Predefined metadata for ShaderCompile -->
+  <!-- ****************************************************************************  -->
+  <ItemDefinitionGroup>
+    <ShaderCompile Condition="'$(Language)'=='C#'">
+      <ShaderCompile_SourceGenerator>true</ShaderCompile_SourceGenerator>
+    </ShaderCompile>
+  </ItemDefinitionGroup>
+
+  <!-- ****************************************************************************  -->
+  <!-- Predefined items for ShaderCompile-->
+  <!-- ****************************************************************************  -->
+  <ItemGroup>
+    <!-- Defines the ShaderCompile item-->
+    <PropertyPageSchema Include="$(MSBuildThisFileDirectory)XenoAtom.ShaderCompiler.Build.xaml"/>
+
+    <!-- Defines the Properties view for ShaderCompile item -->
+    <PropertyPageSchema Include="$(MSBuildThisFileDirectory)ShaderCompiler.xaml">
+      <Context>File;BrowseObject</Context>
+    </PropertyPageSchema>
+    <AvailableItemName Include="ShaderCompile">
+      <Targets>ShaderCompile</Targets>
+    </AvailableItemName>
+  </ItemGroup>
+
+  <!-- Globbings for shader extensions -->
+  <ItemGroup Condition=" '$(EnableDefaultItems)' == 'true' ">
+    <ShaderCompile Include="$(_ShaderCompileDefaultExtensions)" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" Condition=" '$(EnableDefaultShaderCompileItems)' == 'true' " />
+  </ItemGroup>
+
+  <!-- Globbings for removing shader extensions for None -->
+  <ItemGroup Condition=" '$(EnableDefaultItems)' == 'true' And '$(EnableDefaultNoneItems)' == 'true' ">
+    <None Remove="$(_ShaderCompileDefaultExtensions)" Condition=" '$(EnableDefaultShaderCompileItems)' == 'true' "/>
+  </ItemGroup>
+
+</Project>
