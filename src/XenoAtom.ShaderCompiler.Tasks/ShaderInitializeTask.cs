@@ -171,7 +171,6 @@ namespace XenoAtom.ShaderCompiler.Tasks
                     OptimizationLevel = ToStringOpt(item.GetMetadata(nameof(ShaderCompilerOption_optimization_level))),
                     InvertY = ToBool(item.GetMetadata(nameof(ShaderCompilerOption_invert_y))),
                     TargetEnv = ToStringOpt(item.GetMetadata(nameof(ShaderCompilerOption_target_env))),
-                    ShaderStage = ToStringOpt(item.GetMetadata(nameof(ShaderCompilerOption_shader_stage))),
                     TargetSpv = ToStringOpt(item.GetMetadata(nameof(ShaderCompilerOption_target_spv))),
                     GeneratedDebug = ToBool(item.GetMetadata(nameof(ShaderCompilerOption_generate_debug))),
                     Hlsl16BitTypes = ToBool(item.GetMetadata(nameof(ShaderCompilerOption_hlsl_16bit_types))),
