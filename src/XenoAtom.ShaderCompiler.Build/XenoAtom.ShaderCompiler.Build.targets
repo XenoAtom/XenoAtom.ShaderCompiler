@@ -4,9 +4,9 @@
   <!-- Predefined properties -->
   <!-- ****************************************************************************  -->
   <PropertyGroup>
-    <ShaderCompilerOption_root_namespace Condition="'$(ShaderCompilerOption_root_namespace)' == ''">$(RootNamespace)</ShaderCompilerOption_root_namespace>
-    <ShaderCompilerOption_class_name Condition="'$(ShaderCompilerOption_class_name)' == ''">CompiledShaders</ShaderCompilerOption_class_name>
-    <ShaderCompilerOption_class_name>$(ShaderCompilerOption_class_name.TrimEnd('/'))</ShaderCompilerOption_class_name>
+    <ShaderCompilerGlobalOption_root_namespace Condition="'$(ShaderCompilerGlobalOption_root_namespace)' == ''">$(RootNamespace)</ShaderCompilerGlobalOption_root_namespace>
+    <ShaderCompilerGlobalOption_class_name Condition="'$(ShaderCompilerGlobalOption_class_name)' == ''">CompiledShaders</ShaderCompilerGlobalOption_class_name>
+    <ShaderCompilerGlobalOption_class_name>$(ShaderCompilerGlobalOption_class_name.TrimEnd('/'))</ShaderCompilerGlobalOption_class_name>
     <ShaderCompilerOption_output_kind Condition="'$(ShaderCompilerOption_output_kind)' == '' AND '$(Language)'=='C#'">csharp</ShaderCompilerOption_output_kind>
     <ShaderCompilerOption_output_kind Condition="'$(ShaderCompilerOption_output_kind)' == ''">content</ShaderCompilerOption_output_kind>
     <!-- Enable default ShaderCompile globbings -->
@@ -64,8 +64,8 @@
     <UpToDateCheckOutput Include="__ShaderCompiler__force__run" />
 
     <!-- Metadata that we pass from MSBuild to Roslyn Source Generator -->
-    <CompilerVisibleProperty Include="ShaderCompilerOption_root_namespace" />
-    <CompilerVisibleProperty Include="ShaderCompilerOption_class_name" />
+    <CompilerVisibleProperty Include="ShaderCompilerGlobalOption_root_namespace" />
+    <CompilerVisibleProperty Include="ShaderCompilerGlobalOption_class_name" />
     <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="ShaderCompile_SourceGenerator"/>
     <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="ShaderCompile_RelativePathCSharp"/>
 
@@ -106,8 +106,8 @@
       BatchFile="$(_ShaderCompilerOutputBatchFile)"
       InputShaderFiles="@(ShaderCompile)"
 
-      ShaderCompilerOption_root_namespace="$(ShaderCompilerOption_root_namespace)"
-      ShaderCompilerOption_class_name="$(ShaderCompilerOption_class_name)"
+      ShaderCompilerGlobalOption_root_namespace="$(ShaderCompilerGlobalOption_root_namespace)"
+      ShaderCompilerGlobalOption_class_name="$(ShaderCompilerGlobalOption_class_name)"
       ShaderCompilerOption_output_kind="$(ShaderCompilerOption_output_kind)"
       ShaderCompilerOption_stage_selection = "$(ShaderCompilerOption_stage_selection)"
       ShaderCompilerOption_entry_point = "$(ShaderCompilerOption_entry_point)"

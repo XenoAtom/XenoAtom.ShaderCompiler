@@ -20,8 +20,8 @@ namespace XenoAtom.ShaderCompiler
         public const string ShaderCompile_IncludeDependencies = nameof(ShaderCompile_IncludeDependencies);
 
         // Global options
-        public const string ShaderCompilerOption_root_namespace = "root-namespace";
-        public const string ShaderCompilerOption_class_name = "class-name";
+        public const string ShaderCompilerGlobalOption_root_namespace = "root-namespace";
+        public const string ShaderCompilerGlobalOption_class_name = "class-name";
 
         // Global and Per file options
         public const string ShaderCompilerOption_output_kind = "output-kind";

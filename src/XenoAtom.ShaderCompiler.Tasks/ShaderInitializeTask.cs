@@ -28,10 +28,11 @@ namespace XenoAtom.ShaderCompiler.Tasks
 
         [Required]
         public ITaskItem[]? InputShaderFiles { get; set; }
-        
-        public string? ShaderCompilerOption_root_namespace { get; set; }
 
-        public string? ShaderCompilerOption_class_name { get; set; }
+
+        public string? ShaderCompilerGlobalOption_root_namespace { get; set; }
+
+        public string? ShaderCompilerGlobalOption_class_name { get; set; }
 
         public string? ShaderCompilerOption_output_kind { get; set; }
         
@@ -107,8 +108,8 @@ namespace XenoAtom.ShaderCompiler.Tasks
                 GenerateDepsFile = true,
                 Incremental = true,
 
-                RootNamespace = ToStringOpt(ShaderCompilerOption_root_namespace),
-                ClassName = ToStringOpt(ShaderCompilerOption_class_name),
+                RootNamespace = ToStringOpt(ShaderCompilerGlobalOption_root_namespace),
+                ClassName = ToStringOpt(ShaderCompilerGlobalOption_class_name),
                 OutputKind = ToStringOpt(ShaderCompilerOption_output_kind),
                 
                 StageSelection = ToStringOpt(ShaderCompilerOption_stage_selection),
@@ -253,7 +254,7 @@ namespace XenoAtom.ShaderCompiler.Tasks
 
             if (tarOutput.HasValue)
             {
-                var tarFileName = $"{(string.IsNullOrEmpty(ShaderCompilerOption_root_namespace) ? "" : $"{ShaderCompilerOption_root_namespace}.")}{ShaderCompilerOption_class_name}.{(tarOutput.Value == ShaderOutputKind.Tar ? "tar" : "tar.gz")}";
+                var tarFileName = $"{(string.IsNullOrEmpty(ShaderCompilerGlobalOption_root_namespace) ? "" : $"{ShaderCompilerGlobalOption_root_namespace}.")}{ShaderCompilerGlobalOption_class_name}.{(tarOutput.Value == ShaderOutputKind.Tar ? "tar" : "tar.gz")}";
                 var tarFilePath = Path.Combine(cacheDirectory, tarFileName);
                 var taskItem = new TaskItem(tarFileName);
                 taskItem.SetMetadata("Link", tarFilePath);

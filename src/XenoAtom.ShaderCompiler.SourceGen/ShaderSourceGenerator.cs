@@ -29,12 +29,12 @@ namespace XenoAtom.ShaderCompiler.SourceGen
                         //File.AppendAllText(LogPath, $"File {additionalText.Path}\n");
                         var options = analyzerConfigOptions.GetOptions(additionalText);
 
-                        if (!analyzerConfigOptions.GlobalOptions.TryGetValue(nameof(ShaderCompilerConstants.ShaderCompilerOption_root_namespace), out var csNamespace) || string.IsNullOrEmpty(csNamespace))
+                        if (!analyzerConfigOptions.GlobalOptions.TryGetValue(nameof(ShaderCompilerConstants.ShaderCompilerGlobalOption_root_namespace), out var csNamespace) || string.IsNullOrEmpty(csNamespace))
                         {
                             csNamespace = "";
                         }
 
-                        if (!analyzerConfigOptions.GlobalOptions.TryGetValue(nameof(ShaderCompilerConstants.ShaderCompilerOption_class_name), out var csClassName) || string.IsNullOrEmpty(csClassName))
+                        if (!analyzerConfigOptions.GlobalOptions.TryGetValue(nameof(ShaderCompilerConstants.ShaderCompilerGlobalOption_class_name), out var csClassName) || string.IsNullOrEmpty(csClassName))
                         {
                             csClassName = "CompiledShaders";
                         }
