@@ -106,6 +106,7 @@
       BatchFile="$(_ShaderCompilerOutputBatchFile)"
       InputShaderFiles="@(ShaderCompile)"
 
+      ShaderCompilerGlobalOption_include_directory="@(ShaderCompilerGlobalOption_include_directory)"
       ShaderCompilerGlobalOption_root_namespace="$(ShaderCompilerGlobalOption_root_namespace)"
       ShaderCompilerGlobalOption_class_name="$(ShaderCompilerGlobalOption_class_name)"
       ShaderCompilerOption_output_kind="$(ShaderCompilerOption_output_kind)"

@@ -29,6 +29,7 @@ namespace XenoAtom.ShaderCompiler.Tasks
         [Required]
         public ITaskItem[]? InputShaderFiles { get; set; }
 
+        public ITaskItem[]? ShaderCompilerGlobalOption_include_directory { get; set; }
 
         public string? ShaderCompilerGlobalOption_root_namespace { get; set; }
 
@@ -129,6 +130,14 @@ namespace XenoAtom.ShaderCompiler.Tasks
                 HlslIomap = ToBool(ShaderCompilerOption_hlsl_iomap),
                 Defines = ToStringOpt(ShaderCompilerOption_defines),
             };
+
+            if (ShaderCompilerGlobalOption_include_directory != null)
+            {
+                foreach (var includeDirectory in ShaderCompilerGlobalOption_include_directory)
+                {
+                    shaderGlobalOptions.IncludeDirectories.Add(includeDirectory.ItemSpec);
+                }
+            }
 
             // Parse the output kind
             // As we need to generate the proper output files, we need to parse the output kind

@@ -1,0 +1,1 @@
+#define DEFAULT_VALUE_2 1.0

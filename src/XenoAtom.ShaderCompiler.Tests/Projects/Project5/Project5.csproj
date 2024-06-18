@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ShaderCompilerGlobalOption_include_directory Include="../Shared"/>
+  </ItemGroup>
+</Project>

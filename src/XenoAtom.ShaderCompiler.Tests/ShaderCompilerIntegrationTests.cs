@@ -160,6 +160,14 @@ public class ShaderCompilerIntegrationTests
     }
 
     [TestMethod]
+    public void TestSystemInclude()
+    {
+        var project = _build.Load("Project5");
+        project.BuildAndCheck(TaskExecutedWithShaderAndCSharpCompile);
+    }
+
+
+    [TestMethod]
     public void TestInvalidShader()
     {
         var project = _build.Load("Project4");
