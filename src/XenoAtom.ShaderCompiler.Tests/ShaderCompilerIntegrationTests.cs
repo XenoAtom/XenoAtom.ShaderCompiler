@@ -159,6 +159,27 @@ public class ShaderCompilerIntegrationTests
         GC.Collect();
     }
 
+    [TestMethod]
+    public void TestInvalidShader()
+    {
+        var project = _build.Load("Project4");
+
+        var result = project.Build();
+        Assert.AreNotEqual(BuildResultCode.Success, result.OverallResult, "The build should have failed");
+
+        var log = _build.GetLog().Trim();
+
+        _build.TestContext.WriteLine(log);
+
+        // We should have 3 errors
+        var countLines = log.Split('\n').Length;
+        Assert.AreEqual(3, countLines);
+
+        StringAssert.Contains(log, "Invalid.vert.hlsl(3,1): error: '@' : unexpected token");
+        StringAssert.Contains(log, "Invalid.vert.hlsl(3,1): error: 'expression' : Expected");
+        StringAssert.Contains(log, "Invalid.vert.hlsl(2,1): error: '' : function does not return a value: @main");
+    }
+
     [ClassInitialize]
     public static void ClassInitialize(TestContext context)
     {
