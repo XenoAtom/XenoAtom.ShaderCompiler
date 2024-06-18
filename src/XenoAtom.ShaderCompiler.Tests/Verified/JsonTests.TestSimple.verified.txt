@@ -1,0 +1,35 @@
+{
+  "max-thread-count": "4",
+  "cache-directory": "cache",
+  "cache-cs-directory": "cache_cs",
+  "root-namespace": "root",
+  "class-name": "class",
+  "include-directories": [
+    "include1"
+  ],
+  "input-files": [
+    {
+      "input-filepath": "helloworld.hlsl",
+      "output-spv-path": "helloworld.spv",
+      "output-deps-path": "helloworld.deps",
+      "stage-selection": "default",
+      "entry-point": "main",
+      "source-language": "hlsl",
+      "optimization-level": "Os",
+      "invert-y": true,
+      "target-env": "vulkan1.0",
+      "shader-stage": "vertex",
+      "target-spv": "spv1.0",
+      "generate-debug": true,
+      "hlsl-16bit-types": true,
+      "hlsl-offsets": true,
+      "hlsl-functionality1": true,
+      "auto-map-locations": true,
+      "auto-bind-uniforms": true,
+      "hlsl-iomap": true,
+      "defines": "MY_DEFINE=1;MY_DEFINE2="
+    }
+  ],
+  "generate-deps-file": true,
+  "incremental": false
+}

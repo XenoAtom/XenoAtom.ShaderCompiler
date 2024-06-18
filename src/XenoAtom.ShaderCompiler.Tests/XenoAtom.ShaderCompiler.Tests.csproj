@@ -41,6 +41,7 @@
     <PackageReference Include="Microsoft.Build" Version="17.10.4" ExcludeAssets="runtime" />
     <PackageReference Include="Microsoft.Build.Locator" Version="1.7.8" />
     <PackageReference Include="MSTest" Version="3.*" />
+    <PackageReference Include="Verify.MSTest" Version="25.0.3" />
     <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
   </ItemGroup>
 

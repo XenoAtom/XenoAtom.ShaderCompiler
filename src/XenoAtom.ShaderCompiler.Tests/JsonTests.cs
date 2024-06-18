@@ -1,13 +1,14 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace XenoAtom.ShaderCompiler.Tests;
 
 [TestClass]
-public class JsonTests
+public class JsonTests : VerifyBase
 {
     [TestMethod]
-    public void TestSimple()
+    public async Task TestSimple()
     {
         var options = new JsonShaderGlobalOptions();
 
@@ -56,5 +57,55 @@ public class JsonTests
 
         // Compare serialize and deserialize
         Assert.AreEqual(json, json2);
+
+        var settings = CreateVerifySettings();
+        await Verify(json, settings);
+    }
+
+    private static JsonShaderGlobalOptions CreateTestGlobalOptions()
+    {
+        var options = new JsonShaderGlobalOptions
+        {
+            MaxThreadCount = "4",
+            CacheDirectory = "cache",
+            CacheCSharpDirectory = "cache_cs",
+            RootNamespace = "root",
+            ClassName = "class",
+            GenerateDepsFile = true
+        };
+
+        options.IncludeDirectories.Add("include1");
+        options.InputFiles.Add(new JsonShaderFile()
+            {
+                StageSelection = "default",
+                EntryPoint = "main",
+                SourceLanguage = "hlsl",
+                OptimizationLevel = "Os",
+                InvertY = true,
+                TargetEnv = "vulkan1.0",
+                ShaderStage = "vertex",
+                TargetSpv = "spv1.0",
+                GeneratedDebug = true,
+                Hlsl16BitTypes = true,
+                HlslOffsets = true,
+                HlslFunctionality1 = true,
+                AutoMapLocations = true,
+                AutoBindUniforms = true,
+                HlslIomap = true,
+                InputFilePath = "helloworld.hlsl",
+                OutputDepsPath = "helloworld.deps",
+                OutputSpvPath = "helloworld.spv",
+                Defines = "MY_DEFINE=1;MY_DEFINE2=",
+            }
+        );
+        return options;
+    }
+
+    static VerifySettings CreateVerifySettings()
+    {
+        var settings = new VerifySettings();
+        settings.UseDirectory("Verified");
+        settings.DisableDiff();
+        return settings;
     }
 }
