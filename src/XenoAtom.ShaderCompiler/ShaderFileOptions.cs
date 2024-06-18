@@ -49,7 +49,13 @@ public class ShaderFileOptions
 
     public List<ShaderMacro> Defines { get; } = new();
 
-    public Guid Hash(MemoryStream stream)
+    /// <summary>
+    /// Calculate a hash for these options.
+    /// </summary>
+    /// <param name="hash">The XxHash128 instance to reuse.</param>
+    /// <param name="stream">A memory stream used to store temporarily the data to hash.</param>
+    /// <returns>The hash of the data.</returns>
+    public Guid Hash(XxHash128 hash, MemoryStream stream)
     {
         stream.SetLength(0);
 
@@ -77,8 +83,8 @@ public class ShaderFileOptions
             Append(stream, define.Value);
         }
 
-        XxHash128 hash = new();
         stream.Position = 0;
+        hash.Reset();
         hash.Append(stream);
         return Unsafe.BitCast<UInt128, Guid>(hash.GetCurrentHashAsUInt128());
     }
@@ -118,7 +124,13 @@ public class ShaderFileOptions
     {
         stream.Write(MemoryMarshal.Cast<T, byte>(MemoryMarshal.CreateSpan(ref value, 1)));
     }
-    
+
+    /// <summary>
+    /// Merge right options over left options.
+    /// </summary>
+    /// <param name="left">Left options</param>
+    /// <param name="right">Right options</param>
+    /// <returns>The merged options.</returns>
     public static ShaderFileOptions Merge(ShaderFileOptions left, ShaderFileOptions right)
     {
         ArgumentNullException.ThrowIfNull(right);

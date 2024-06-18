@@ -1,11 +1,13 @@
+using System.IO.Hashing;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using XenoAtom.Interop;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace XenoAtom.ShaderCompiler.Tests;
 
 [TestClass]
-public class JsonTests : VerifyBase
+public class DataModelTests : VerifyBase
 {
     [TestMethod]
     public async Task TestSimple()
@@ -60,6 +62,63 @@ public class JsonTests : VerifyBase
 
         var settings = CreateVerifySettings();
         await Verify(json, settings);
+    }
+
+    [TestMethod]
+    public void TestHash()
+    {
+        var options = CreateTestGlobalOptions();
+        var shaderFile = options.InputFiles[0].ToRuntime();
+
+        var xxHash128 = new XxHash128();
+        var stream = new MemoryStream();
+
+        var hash = shaderFile.Hash(xxHash128, stream);
+        var hash2 = shaderFile.Hash(xxHash128, stream);
+        Assert.AreEqual(hash, hash2);
+
+        shaderFile.Defines.Add(new("MY_DEFINE3", "2"));
+        var hash3 = shaderFile.Hash(xxHash128, stream);
+        Assert.AreNotEqual(hash, hash3);
+    }
+
+
+    [TestMethod]
+    public async Task TestMerge()
+    {
+        var options = CreateTestGlobalOptions();
+        var shaderFile1 = new ShaderFile("input.hlsl")
+        {
+            EntryPoint = "hello_from_left",
+            InvertY = false,
+        };
+        shaderFile1.Defines.Add(new("MY_DEFINE2", "2"));
+        shaderFile1.Defines.Add(new("MY_DEFINE3", "3"));
+        
+        var shaderFile2 = options.InputFiles[0].ToRuntime();
+
+        var mergedOptions = ShaderFileOptions.Merge(shaderFile1, shaderFile2);
+
+        Assert.AreEqual("main", mergedOptions.EntryPoint);
+        Assert.AreEqual(true, mergedOptions.InvertY);
+        Assert.AreEqual(libshaderc.shaderc_env_version.shaderc_env_version_vulkan_1_0, mergedOptions.TargetEnv);
+        Assert.AreEqual(libshaderc.shaderc_shader_kind.shaderc_vertex_shader, mergedOptions.ShaderStage);
+        Assert.AreEqual(libshaderc.shaderc_spirv_version.shaderc_spirv_version_1_0, mergedOptions.TargetSpv);
+        Assert.AreEqual(true, mergedOptions.GeneratedDebug);
+        Assert.AreEqual(true, mergedOptions.Hlsl16BitTypes);
+        Assert.AreEqual(true, mergedOptions.HlslOffsets);
+        Assert.AreEqual(true, mergedOptions.HlslFunctionality1);
+        Assert.AreEqual(true, mergedOptions.AutoMapLocations);
+        Assert.AreEqual(true, mergedOptions.AutoBindUniforms);
+        Assert.AreEqual(true, mergedOptions.HlslIomap);
+        Assert.AreEqual(3, mergedOptions.Defines.Count);
+        var keyValue = mergedOptions.Defines.FirstOrDefault(x => x.Key == "MY_DEFINE2");
+        Assert.IsNotNull(keyValue);
+        Assert.AreEqual(null, keyValue.Value); // Overridden by the right shader file
+
+        mergedOptions = ShaderFileOptions.Merge(shaderFile2, shaderFile1);
+        Assert.AreEqual("hello_from_left", mergedOptions.EntryPoint);
+        Assert.AreEqual(false, mergedOptions.InvertY);
     }
 
     private static JsonShaderGlobalOptions CreateTestGlobalOptions()

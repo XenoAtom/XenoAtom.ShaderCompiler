@@ -1,4 +1,4 @@
-{
+﻿{
   "max-thread-count": "4",
   "cache-directory": "cache",
   "cache-cs-directory": "cache_cs",

@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Hashing;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -19,9 +20,10 @@ public unsafe partial class ShaderCompilerContext : IDisposable
     private readonly ShaderCompilerApp _app;
     private readonly HashSet<string> _includedFiles = new();
     private readonly List<string> _allIncludeDirectories = new();
-    private shaderc_compiler_t _compiler;
+    private readonly shaderc_compiler_t _compiler;
     private GCHandle _handle;
-    private MemoryStream _hashStream = new();
+    private readonly MemoryStream _hashStream = new();
+    private readonly XxHash128 _xxHash128 = new();
 
     public ShaderCompilerContext(ShaderCompilerApp app)
     {
@@ -80,7 +82,7 @@ public unsafe partial class ShaderCompilerContext : IDisposable
         
         bool compileShader = false;
 
-        var hashOfOptions = mergedOptions.Hash(_hashStream);
+        var hashOfOptions = mergedOptions.Hash(_xxHash128, _hashStream);
 
         // Incremental? Check if we need to recompile
         if (_app.Incremental &&
