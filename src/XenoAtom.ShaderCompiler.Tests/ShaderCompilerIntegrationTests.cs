@@ -24,6 +24,15 @@ public class ShaderCompilerIntegrationTests
                                    }
                                    """;
 
+    private const string ShaderHlslWithInclude1 = """
+                                       #pragma shader_stage(vertex)
+                                       #include "include1.hlsl"
+                                       float4 main(float2 pos : POSITION) : SV_POSITION
+                                       {
+                                           return float4(pos, 0, DEFAULT_VALUE);
+                                       }
+                                       """;
+    
     private const string ShaderHlsl2 = """
                                    #pragma shader_stage(vertex)
                                    float4 main(float2 pos : POSITION) : SV_POSITION
@@ -111,6 +120,41 @@ public class ShaderCompilerIntegrationTests
 
         // Build the project again, it should not recompile the shader
         project.BuildAndCheck(TaskExecutedWithNoCompile);
+
+        GC.Collect();
+    }
+
+    [TestMethod]
+    public void TestShaderWithIncludes()
+    {
+        var project = _build.Load("Project3");
+
+        const string shaderFile = "Test_with_include.vert.hlsl";
+        const string shaderProperty = "Test_with_include_vert_hlsl";
+        const string shaderIncludeFile = "include1.hlsl";
+
+        // Add a shader file
+        project.WriteAllText(shaderFile, ShaderHlslWithInclude1);
+        project.WriteAllText(shaderIncludeFile, "#define DEFAULT_VALUE 3.0\n");
+
+        // Build the project
+        project.BuildAndCheck(TaskExecutedWithShaderAndCSharpCompile);
+
+        // Check the shader is compiled
+        {
+            using var shaderLoaderContext = project.LoadAssembly();
+            var compiledType = shaderLoaderContext.LoadCompiledShaders();
+            shaderLoaderContext.AssertShader(compiledType, shaderProperty);
+        }
+
+        // Build the project again, it should not recompile the shader
+        project.BuildAndCheck(TaskExecutedWithNoCompile);
+
+        // Touch the include file
+        project.WriteAllText(shaderIncludeFile, "#define DEFAULT_VALUE 2.0\n");
+
+        // Build the project again, it should recompile the shader
+        project.BuildAndCheck(TaskExecutedWithShaderAndCSharpCompile);
 
         GC.Collect();
     }
@@ -222,7 +266,13 @@ public class ShaderCompilerIntegrationTests
             var path = Path.Combine(_projectFolder, relativePath);
             File.WriteAllText(path, content);
         }
-        
+
+        public void TouchFile(string relativePath)
+        {
+            var path = Path.Combine(_projectFolder, relativePath);
+            File.SetLastWriteTimeUtc(path, DateTime.UtcNow);
+        }
+
         public void BuildAndCheck(List<string> expectedTasks)
         {
             var result = Build();

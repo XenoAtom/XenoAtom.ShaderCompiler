@@ -67,18 +67,22 @@
     <CompilerVisibleProperty Include="ShaderCompilerOption_root_namespace" />
     <CompilerVisibleProperty Include="ShaderCompilerOption_class_name" />
     <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="ShaderCompile_SourceGenerator"/>
-    <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="ShaderCompile_PathCSharp"/>
     <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="ShaderCompile_RelativePathCSharp"/>
 
-    <_ShaderCompile_CSharpFile Include="@(ShaderCompile)">
-      <!--The link is used to workaround an issue that shows otherwise empty folders from obj/-->
-      <Link>%(RelativeDir)%(Filename)%(Extension).cs</Link>
+    <ShaderCompile Update="@(ShaderCompile)">
       <ShaderCompile_RelativePathCSharp>%(RelativeDir)%(Filename)%(Extension).cs</ShaderCompile_RelativePathCSharp>
-      <ShaderCompile_PathCSharp>$(_ShaderCompilerOutputCSharpDirectory)%(RelativeDir)%(Filename)%(Extension).cs</ShaderCompile_PathCSharp>
+    </ShaderCompile>
+
+    <_ShaderCompile_CSharpFile Include="@(ShaderCompile->'$(_ShaderCompilerOutputCSharpDirectory)%(RelativeDir)%(Filename)%(Extension).cs')">
+      <!--The link is used to workaround an issue that shows otherwise empty folders from obj/-->
+      <Link>%(ShaderCompile_RelativePathCSharp)</Link>
     </_ShaderCompile_CSharpFile>
 
     <!-- Create additional files items used by the Roslyn Source Generator -->
     <AdditionalFiles Include="@(_ShaderCompile_CSharpFile)" Visible="false"/>
+
+    <!-- Make sure that the output marker file is added as an additional file in order to detect when the compiler ran --><!--
+    <AdditionalFiles Include="$(_ShaderCompilerOutputMarkerFile)" Visible="false"/>-->
   </ItemGroup>
 
   <!-- ****************************************************************************  -->
@@ -152,9 +156,7 @@
     BeforeTargets="PreBuildEvent"
     >
     <!-- We plug before PreBuildEvent as PrepareForBuild is supposed to create intermediate folders -->
-
-    <Message Importance="High" Text="ShaderCompiler running on @(ShaderCompileOutput)"/>
-
+    <!--<Message Importance="High" Text="ShaderCompiler running on @(ShaderCompileOutput)"/>-->
     <ShaderCompileTask
       BatchFile="$(_ShaderCompilerOutputBatchFile)"
       ShaderCompilerPath="$(_ShaderCompilerMainDll)"

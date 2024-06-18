@@ -15,7 +15,6 @@ namespace XenoAtom.ShaderCompiler.SourceGen
     public class ShaderSourceGenerator : IIncrementalGenerator
     {
         public const string SourceGenMetadata = $"build_metadata.AdditionalFiles." + ShaderCompilerConstants.ShaderCompile_SourceGenerator;
-        public const string SourceCSharpFile = $"build_metadata.AdditionalFiles." + ShaderCompilerConstants.ShaderCompile_PathCSharp;
         public const string SourceRelativeCSharpFile = $"build_metadata.AdditionalFiles." + ShaderCompilerConstants.ShaderCompile_RelativePathCSharp;
 
         //public const string LogPath = "C:\\code\\XenoAtom\\XenoAtom.ShaderCompiler\\src\\XenoAtom.ShaderCompiler.Tests\\obj\\Debug\\net8.0\\ShaderCompiler_SourceGenerator.log";
@@ -45,7 +44,8 @@ namespace XenoAtom.ShaderCompiler.SourceGen
                             options.TryGetValue(SourceRelativeCSharpFile, out var csRelativeFilePath) && !string.IsNullOrEmpty(csRelativeFilePath))
                         {
                             string text;
-                            if (options.TryGetValue(SourceCSharpFile, out var csFilePath) && !string.IsNullOrEmpty(csFilePath) && File.Exists(csFilePath))
+                            var csFilePath = additionalText.Path;
+                            if (!string.IsNullOrEmpty(csFilePath) && File.Exists(csFilePath))
                             {
                                 text = File.ReadAllText(csFilePath);
                             }

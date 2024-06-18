@@ -129,7 +129,7 @@ public unsafe partial class ShaderCompilerContext : IDisposable
                     if (_app.FileExists(includeDep))
                     {
                         var lastWriteTime = _app.GetCachedLastWriteTimeUtc(includeDep);
-                        if (outputLastWriteTime > lastWriteTime)
+                        if (lastWriteTime > outputLastWriteTime)
                         {
                             compileShader = true;
                             break;
@@ -465,6 +465,9 @@ public unsafe partial class ShaderCompilerContext : IDisposable
         return true;
     }
 
+    [GeneratedRegex(@"(?<path>.*?)(:(?<line>\d+))?: (?<kind>error|warning): (?<message>.*)")]
+    private static partial Regex RegexMatchLine();
+
     private static string[] ParseLines(string text, bool replaceErrorToVisualStudioFormat)
     {
         var lines = text.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
@@ -480,7 +483,16 @@ public unsafe partial class ShaderCompilerContext : IDisposable
                 if (match.Success)
                 {
                     var path = match.Groups["path"].Value;
-                    var lineNo = int.Parse(match.Groups["line"].Value);
+                    var lineText = match.Groups["line"];
+                    int lineNo = 1;
+                    if (!string.IsNullOrEmpty(lineText.Value))
+                    {
+                        lineNo = int.Parse(lineText.Value);
+                    }
+                    if (string.IsNullOrEmpty(path))
+                    {
+                        path = "1";
+                    }
                     var kind = match.Groups["kind"].Value;
                     var message = match.Groups["message"].Value;
 
@@ -491,11 +503,6 @@ public unsafe partial class ShaderCompilerContext : IDisposable
 
         return lines;
     }
-
-
-
-    [GeneratedRegex(@"(?<path>.*?):(?<line>\d+): (?<kind>error|warning): (?<message>.*)")]
-    private static partial Regex RegexMatchLine();
 
     [UnmanagedCallersOnly(CallConvs = [typeof(CallConvStdcall)])]
     private static shaderc_include_result* IncludeCallback(void* user_data, byte* requested_source, int typeI, byte* requesting_source, nuint include_depth)

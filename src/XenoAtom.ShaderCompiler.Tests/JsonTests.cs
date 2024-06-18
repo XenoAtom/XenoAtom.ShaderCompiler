@@ -4,16 +4,18 @@ using System.Text.Json.Serialization;
 namespace XenoAtom.ShaderCompiler.Tests;
 
 [TestClass]
-public class Class1Test
+public class JsonTests
 {
-
     [TestMethod]
     public void TestSimple()
     {
         var options = new JsonShaderGlobalOptions();
 
-        //var x = CompiledShaders.Test2_vert_hlsl;
-        
+        options.MaxThreadCount = "4";
+        options.CacheDirectory = "cache";
+        options.CacheCSharpDirectory = "cache_cs";
+        options.RootNamespace = "root";
+        options.ClassName = "class";
         options.IncludeDirectories.Add("include1");
         options.GenerateDepsFile = true;
         options.InputFiles.Add(new JsonShaderFile()
@@ -49,11 +51,10 @@ public class Class1Test
 
         // serialize to a json string
         var json = JsonSerializer.Serialize(options, sourceGenOptions);
+        var deserialize = JsonSerializer.Deserialize<JsonShaderGlobalOptions>(json, sourceGenOptions);
+        var json2 = JsonSerializer.Serialize(deserialize, sourceGenOptions);
 
-        var obj = JsonSerializer.Deserialize<JsonShaderGlobalOptions>(json, sourceGenOptions);
-
-
-
-        Console.WriteLine(json);
+        // Compare serialize and deserialize
+        Assert.AreEqual(json, json2);
     }
 }
