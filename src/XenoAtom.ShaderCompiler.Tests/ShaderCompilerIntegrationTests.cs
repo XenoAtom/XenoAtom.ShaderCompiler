@@ -162,11 +162,24 @@ public class ShaderCompilerIntegrationTests
     [TestMethod]
     public void TestSystemInclude()
     {
-        var project = _build.Load("Project5");
+        var project = _build.Load("Project5_WithIncludeDirectories");
         project.BuildAndCheck(TaskExecutedWithShaderAndCSharpCompile);
     }
 
+    [TestMethod]
+    public void TestDefinePerItem()
+    {
+        var project = _build.Load("Project6_WithDefinePerItem");
+        project.BuildAndCheck(TaskExecutedWithShaderAndCSharpCompile);
+    }
 
+    [TestMethod]
+    public void TestDefineGlobal()
+    {
+        var project = _build.Load("Project7_WithDefine");
+        project.BuildAndCheck(TaskExecutedWithShaderAndCSharpCompile);
+    }
+    
     [TestMethod]
     public void TestInvalidShader()
     {

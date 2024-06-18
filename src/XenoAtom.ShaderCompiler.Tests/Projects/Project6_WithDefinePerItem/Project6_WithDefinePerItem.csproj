@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ShaderCompilerGlobalOption_include_directory Include="../Shared"/>
+    <ShaderCompile Update="Test.vert.hlsl">
+      <ShaderCompileOptions_defines>TEST_NO_INCLUDE</ShaderCompileOptions_defines>
+    </ShaderCompile>
+  </ItemGroup>
+</Project>

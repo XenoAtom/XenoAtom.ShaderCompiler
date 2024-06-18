@@ -9,8 +9,6 @@ using System.Text.Json.Serialization;
 using System.Text.Json;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
-using System.Security.Cryptography;
-using System.Linq;
 using System.Text;
 
 namespace XenoAtom.ShaderCompiler.Tasks

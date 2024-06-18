@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <ShaderCompilerOption_defines>TEST_NO_INCLUDE</ShaderCompilerOption_defines>
+  </PropertyGroup>
+</Project>
