@@ -61,9 +61,9 @@ public class ShaderCompilerIntegrationTests
                                        """;
 
     [TestMethod]
-    public void Test_Project1_SingleShader()
+    public void Test_Project001_SingleShader()
     {
-        var project = _build.Load("Project1_SingleShader");
+        var project = _build.Load("Project001_SingleShader");
 
         const string shaderFile = "Test.vert.hlsl";
         const string shaderProperty = "Test_vert_hlsl";
@@ -94,9 +94,9 @@ public class ShaderCompilerIntegrationTests
     }
 
     [TestMethod]
-    public void Test_Project2_MultipleShaders()
+    public void Test_Project002_MultipleShaders()
     {
-        var project = _build.Load("Project2_MultipleShaders");
+        var project = _build.Load("Project002_MultipleShaders");
 
         const string shaderFile1 = "Test1.vert.hlsl";
         const string shaderProperty1 = "Test1_vert_hlsl";
@@ -125,9 +125,9 @@ public class ShaderCompilerIntegrationTests
     }
 
     [TestMethod]
-    public void Test_Project3_ShaderWithIncludes()
+    public void Test_Project003_ShaderWithIncludes()
     {
-        var project = _build.Load("Project3_ShaderWithIncludes");
+        var project = _build.Load("Project003_ShaderWithIncludes");
 
         const string shaderFile = "Test_with_include.vert.hlsl";
         const string shaderProperty = "Test_with_include_vert_hlsl";
@@ -160,9 +160,9 @@ public class ShaderCompilerIntegrationTests
     }
 
     [TestMethod]
-    public void Test_Project5_WithIncludeDirectories()
+    public void Test_Project005_WithIncludeDirectories()
     {
-        var project = _build.Load("Project5_WithIncludeDirectories");
+        var project = _build.Load("Project005_WithIncludeDirectories");
         project.BuildAndCheck(TaskExecutedWithShaderAndCSharpCompile);
 
         // Check the shader in the Below folder is compiled
@@ -177,23 +177,23 @@ public class ShaderCompilerIntegrationTests
     }
 
     [TestMethod]
-    public void Test_Project6_WithDefinePerItem()
+    public void Test_Project006_WithDefinePerItem()
     {
-        var project = _build.Load("Project6_WithDefinePerItem");
+        var project = _build.Load("Project006_WithDefinePerItem");
         project.BuildAndCheck(TaskExecutedWithShaderAndCSharpCompile);
     }
 
     [TestMethod]
-    public void Test_Project7_WithDefine()
+    public void Test_Project007_WithDefine()
     {
-        var project = _build.Load("Project7_WithDefine");
+        var project = _build.Load("Project007_WithDefine");
         project.BuildAndCheck(TaskExecutedWithShaderAndCSharpCompile);
     }
     
     [TestMethod]
-    public void Test_Project4_InvalidShader()
+    public void Test_Project004_InvalidShader()
     {
-        var project = _build.Load("Project4_InvalidShader");
+        var project = _build.Load("Project004_InvalidShader");
 
         var result = project.Build();
         Assert.AreNotEqual(BuildResultCode.Success, result.OverallResult, "The build should have failed");
@@ -212,22 +212,36 @@ public class ShaderCompilerIntegrationTests
     }
 
     [TestMethod]
-    public void Test_Project8_ContentOutput()
+    public void Test_Project008_ContentOutput()
     {
-        var project = _build.Load("Project8_ContentOutput");
+        var project = _build.Load("Project008_ContentOutput");
         project.BuildAndCheck(TaskExecutedWithShaderAndCSharpCompile);
     }
 
     [TestMethod]
-    public void Test_Project9_SimulateIDE()
+    public void Test_Project009_SimulateIDE()
     {
-        var project = _build.Load("Project9_SimulateIDE");
+        var project = _build.Load("Project009_SimulateIDE");
         project.BuildAndCheck(TaskExecutedWithShaderAndCSharpCompile);
 
         {
             using var shaderLoaderContext = project.LoadAssembly();
             var compiledType = shaderLoaderContext.LoadCompiledShaders();
             shaderLoaderContext.AssertShader(compiledType, "Test_vert_hlsl", assertZeroLength: true);
+        }
+    }
+
+    [TestMethod]
+    public void Test_Project010_CustomNames()
+    {
+        var project = _build.Load("Project010_CustomNames");
+        project.BuildAndCheck(TaskExecutedWithShaderAndCSharpCompile);
+
+        {
+            using var shaderLoaderContext = project.LoadAssembly();
+            var compiledType = shaderLoaderContext.LoadCompiledShaders("CustomCompiledShaders");
+            shaderLoaderContext.AssertShader(compiledType, "Test_vert_hlsl");
+            Assert.AreEqual("CustomNamespace", compiledType.Namespace, "Invalid namespace");
         }
     }
 

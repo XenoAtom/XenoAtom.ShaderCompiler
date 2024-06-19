@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <ShaderCompilerGlobalOption_root_namespace>CustomNamespace</ShaderCompilerGlobalOption_root_namespace>
+    <ShaderCompilerGlobalOption_class_name>CustomCompiledShaders</ShaderCompilerGlobalOption_class_name>
+  </PropertyGroup>
+</Project>

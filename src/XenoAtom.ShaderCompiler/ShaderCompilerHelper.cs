@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace XenoAtom.ShaderCompiler
 {
-    internal class ShaderCompilerHelper
+    public class ShaderCompilerHelper
     {
         private static readonly Regex RegexMatchNonIdentifierCharacters = new(@"[^\w]+", RegexOptions.Compiled);
 
