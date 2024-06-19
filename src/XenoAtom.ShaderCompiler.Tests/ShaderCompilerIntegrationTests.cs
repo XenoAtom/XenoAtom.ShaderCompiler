@@ -164,6 +164,16 @@ public class ShaderCompilerIntegrationTests
     {
         var project = _build.Load("Project5_WithIncludeDirectories");
         project.BuildAndCheck(TaskExecutedWithShaderAndCSharpCompile);
+
+        // Check the shader in the Below folder is compiled
+        {
+            using var shaderLoaderContext = project.LoadAssembly();
+            var compiledType = shaderLoaderContext.LoadCompiledShaders();
+
+            var belowType = compiledType.GetNestedTypes().FirstOrDefault(x => x.Name == "Below");
+            Assert.IsNotNull(belowType, "The type `Below` was not found in the compiled shaders");
+            shaderLoaderContext.AssertShader(belowType, "Test_frag_hlsl");
+        }
     }
 
     [TestMethod]
@@ -199,6 +209,13 @@ public class ShaderCompilerIntegrationTests
         StringAssert.Contains(log, "Invalid.vert.hlsl(3,1): error: '@' : unexpected token");
         StringAssert.Contains(log, "Invalid.vert.hlsl(3,1): error: 'expression' : Expected");
         StringAssert.Contains(log, "Invalid.vert.hlsl(2,1): error: '' : function does not return a value: @main");
+    }
+
+    [TestMethod]
+    public void Test_Project8_ContentOutput()
+    {
+        var project = _build.Load("Project8_ContentOutput");
+        project.BuildAndCheck(TaskExecutedWithShaderAndCSharpCompile);
     }
 
     [ClassInitialize]
@@ -398,7 +415,7 @@ public class ShaderCompilerIntegrationTests
         public void AssertShader(Type compiledShadersType, string shaderName)
         {
             var property = compiledShadersType.GetProperty(shaderName, BindingFlags.Public | BindingFlags.Static);
-            Assert.IsNotNull(property, "The property `Test_vert_hlsl` was not found in the compiled shaders");
+            Assert.IsNotNull(property, $"The property `{shaderName}` was not found in the compiled shaders");
             var method = property.GetGetMethod();
             var getShaderDelegate = (GetShaderDelegate)method!.CreateDelegate<GetShaderDelegate>();
             var span = getShaderDelegate();

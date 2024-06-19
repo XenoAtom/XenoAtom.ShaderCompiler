@@ -68,9 +68,11 @@
     <CompilerVisibleProperty Include="ShaderCompilerGlobalOption_class_name" />
     <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="ShaderCompile_SourceGenerator"/>
     <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="ShaderCompile_RelativePathCSharp"/>
+    <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="ShaderCompilerOption_output_kind"/>
 
     <ShaderCompile Update="@(ShaderCompile)">
       <ShaderCompile_RelativePathCSharp>%(RelativeDir)%(Filename)%(Extension).cs</ShaderCompile_RelativePathCSharp>
+      <ShaderCompilerOption_output_kind>$([MSBuild]::ValueOrDefault('%(ShaderCompilerOption_output_kind)', '$(ShaderCompilerOption_output_kind)'))</ShaderCompilerOption_output_kind>
     </ShaderCompile>
 
     <_ShaderCompile_CSharpFile Include="@(ShaderCompile->'$(_ShaderCompilerOutputCSharpDirectory)%(RelativeDir)%(Filename)%(Extension).cs')">

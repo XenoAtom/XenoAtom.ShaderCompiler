@@ -155,9 +155,8 @@ namespace XenoAtom.ShaderCompiler.Tasks
                 var inputItem = InputShaderFiles[i];
                 var sourceShaderFile = inputItem.GetMetadata("FullPath");
                 var relativeOutputPath = $"{Path.Combine(inputItem.GetMetadata("RelativeDir"), inputItem.GetMetadata("Filename"))}{inputItem.GetMetadata("Extension")}";
-                var baseOutputFilePath = Path.Combine(cacheDirectory, relativeOutputPath);
-                var relativeDepsPath = $"{baseOutputFilePath}.deps";
-                var relativeSpvPath = $"{baseOutputFilePath}.spv";
+                var relativeDepsPath = $"{relativeOutputPath}.deps";
+                var relativeSpvPath = $"{relativeOutputPath}.spv";
                 var depsPath = Path.Combine(cacheDirectory, relativeDepsPath);
                 var spvPath = Path.Combine(cacheDirectory, relativeSpvPath);
 
@@ -210,8 +209,9 @@ namespace XenoAtom.ShaderCompiler.Tasks
                 }
                 else if (outputKind == ShaderOutputKind.Content)
                 {
-                    var taskItem = new TaskItem(relativeSpvPath);
-                    taskItem.SetMetadata("Link", spvPath);
+                    var taskItem = new TaskItem(spvPath);
+                    taskItem.SetMetadata("Link", relativeSpvPath);
+                    taskItem.SetMetadata("CopyToOutputDirectory", "PreserveNewest");
 
                     contentFiles.Add(taskItem);
                 }
@@ -264,8 +264,9 @@ namespace XenoAtom.ShaderCompiler.Tasks
             {
                 var tarFileName = $"{(string.IsNullOrEmpty(ShaderCompilerGlobalOption_root_namespace) ? "" : $"{ShaderCompilerGlobalOption_root_namespace}.")}{ShaderCompilerGlobalOption_class_name}.{(tarOutput.Value == ShaderOutputKind.Tar ? "tar" : "tar.gz")}";
                 var tarFilePath = Path.Combine(cacheDirectory, tarFileName);
-                var taskItem = new TaskItem(tarFileName);
-                taskItem.SetMetadata("Link", tarFilePath);
+                var taskItem = new TaskItem(tarFilePath);
+                taskItem.SetMetadata("Link", tarFileName);
+                taskItem.SetMetadata("CopyToOutputDirectory", "PreserveNewest");
                 contentFiles.Add(taskItem);
             }
 

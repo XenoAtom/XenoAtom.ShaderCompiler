@@ -27,7 +27,7 @@
 
   <!-- Globbings for shader extensions -->
   <ItemGroup Condition=" '$(EnableDefaultItems)' == 'true' ">
-    <ShaderCompile Include="$(_ShaderCompileDefaultExtensions)" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" Condition=" '$(EnableDefaultShaderCompileItems)' == 'true' " />
+    <ShaderCompile Include="$(_ShaderCompileDefaultExtensions)" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" Condition=" '$(EnableDefaultShaderCompileItems)' == 'true' "/>
   </ItemGroup>
 
   <!-- Globbings for removing shader extensions for None -->

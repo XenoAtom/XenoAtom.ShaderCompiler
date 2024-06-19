@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <ShaderCompilerOption_output_kind>content</ShaderCompilerOption_output_kind>
+  </PropertyGroup>
+  <ItemGroup>
+    <ShaderCompile Update="Test.vert.hlsl">
+      <ShaderCompilerOption_entry_point>VSMain</ShaderCompilerOption_entry_point>
+    </ShaderCompile>
+    <ShaderCompile Update="Test.frag.hlsl">
+      <ShaderCompilerOption_entry_point>PSMain</ShaderCompilerOption_entry_point>
+    </ShaderCompile>
+  </ItemGroup>
+</Project>

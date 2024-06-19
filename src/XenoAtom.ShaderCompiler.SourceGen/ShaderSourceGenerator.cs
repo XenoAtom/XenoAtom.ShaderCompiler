@@ -12,8 +12,9 @@ namespace XenoAtom.ShaderCompiler.SourceGen
     [Generator(LanguageNames.CSharp)]
     public class ShaderSourceGenerator : IIncrementalGenerator
     {
-        public const string SourceGenMetadata = $"build_metadata.AdditionalFiles." + ShaderCompilerConstants.ShaderCompile_SourceGenerator;
-        public const string SourceRelativeCSharpFile = $"build_metadata.AdditionalFiles." + ShaderCompilerConstants.ShaderCompile_RelativePathCSharp;
+        public const string SourceGenMetadata = $"build_metadata.AdditionalFiles." + nameof(ShaderCompilerConstants.ShaderCompile_SourceGenerator);
+        public const string SourceRelativeCSharpFile = $"build_metadata.AdditionalFiles." + nameof(ShaderCompilerConstants.ShaderCompile_RelativePathCSharp);
+        public const string SourceOutputKind = $"build_metadata.AdditionalFiles." + nameof(ShaderCompilerConstants.ShaderCompilerOption_output_kind);
 
         //public const string LogPath = "C:\\code\\XenoAtom\\XenoAtom.ShaderCompiler\\src\\XenoAtom.ShaderCompiler.Tests\\obj\\Debug\\net8.0\\ShaderCompiler_SourceGenerator.log";
 
@@ -24,8 +25,12 @@ namespace XenoAtom.ShaderCompiler.SourceGen
                     ((AdditionalText, AnalyzerConfigOptionsProvider) tuple, CancellationToken cancellationToken) =>
                     {
                         var (additionalText, analyzerConfigOptions) = tuple;
-                        //File.AppendAllText(LogPath, $"File {additionalText.Path}\n");
                         var options = analyzerConfigOptions.GetOptions(additionalText);
+
+                        if (!options.TryGetValue(SourceOutputKind, out var outputKind) || !string.Equals(outputKind, "csharp", StringComparison.OrdinalIgnoreCase))
+                        {
+                            return ((string?)null, (string?)null);
+                        }
 
                         if (!analyzerConfigOptions.GlobalOptions.TryGetValue(nameof(ShaderCompilerConstants.ShaderCompilerGlobalOption_root_namespace), out var csNamespace) || string.IsNullOrEmpty(csNamespace))
                         {

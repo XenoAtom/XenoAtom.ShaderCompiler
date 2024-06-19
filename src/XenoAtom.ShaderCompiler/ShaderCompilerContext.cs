@@ -79,6 +79,12 @@ public unsafe partial class ShaderCompilerContext : IDisposable
         {
             outputSpvPath = Path.Combine(_app.CacheDirectory!, shaderFile.OutputSpvPath);
         }
+
+        string? outputDepsPath = null;
+        if (_app.GenerateDepsFile && shaderFile.OutputDepsPath != null)
+        {
+            outputDepsPath = Path.Combine(_app.CacheDirectory!, shaderFile.OutputDepsPath);
+        }
         
         bool compileShader = false;
 
@@ -87,7 +93,7 @@ public unsafe partial class ShaderCompilerContext : IDisposable
         // Incremental? Check if we need to recompile
         if (_app.Incremental &&
             _app.GenerateDepsFile &&
-            shaderFile.OutputDepsPath != null &&
+            outputDepsPath != null &&
             outputSpvPath != null &&
             _app.FileExists(outputSpvPath) &&
             _app.FileExists(inputFilePath) &&
@@ -115,7 +121,7 @@ public unsafe partial class ShaderCompilerContext : IDisposable
             {
 
                 // If any of the include files is newer than the output file, we need to recompile
-                var includeDeps = _app.FileReadAllText(shaderFile.OutputDepsPath);
+                var includeDeps = _app.FileReadAllText(outputDepsPath);
                 ReadOnlySpan<string> includeDepsLines = includeDeps.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
 
                 // First entry in the deps file is the hash
@@ -393,9 +399,9 @@ public unsafe partial class ShaderCompilerContext : IDisposable
                     string outputFile;
                     if (_app.OutputFile == null)
                     {
-                        if (shaderFile.OutputSpvPath != null)
+                        if (outputSpvPath != null)
                         {
-                            outputFile = Path.Combine(_app.CacheDirectory!, shaderFile.OutputSpvPath);
+                            outputFile = outputSpvPath;
                         }
                         else
                         {
@@ -414,9 +420,15 @@ public unsafe partial class ShaderCompilerContext : IDisposable
                         outputFile = _app.OutputFile;
                     }
 
+                    var outputDirectory = Path.GetDirectoryName(outputFile);
+                    if (!string.IsNullOrEmpty(outputDirectory) && !Directory.Exists(outputDirectory))
+                    {
+                        Directory.CreateDirectory(outputDirectory);
+                    }
+                    
                     if (_app.GenerateDepsFile)
                     {
-                        var depsFile = shaderFile.OutputDepsPath;
+                        var depsFile = outputDepsPath;
                         if (string.IsNullOrEmpty(depsFile))
                         {
                             depsFile = Path.ChangeExtension(outputFile, ".deps");
