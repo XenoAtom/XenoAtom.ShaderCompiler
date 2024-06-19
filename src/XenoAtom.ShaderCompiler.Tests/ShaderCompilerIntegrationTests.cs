@@ -2,6 +2,8 @@
 // Licensed under the BSD-Clause 2 license.
 // See license.txt file in the project root for full license information.
 
+using System.Formats.Tar;
+using System.IO.Compression;
 using System.Reflection;
 using System.Runtime.Loader;
 using System.Text;
@@ -263,6 +265,62 @@ public class ShaderCompilerIntegrationTests
     {
         var project = _build.Load("Project012_MultipleOutputKind");
         project.BuildAndCheck(TaskExecutedWithShaderAndCSharpCompile);
+
+        // Check C# embedded file
+        {
+            using var shaderLoaderContext = project.LoadAssembly();
+            var compiledType = shaderLoaderContext.LoadCompiledShaders();
+            shaderLoaderContext.AssertShader(compiledType, "Test_vert_hlsl");
+        }
+
+        {
+            // Check content files
+            var folder = project.GetBinaryFolder();
+            var fileContent1 = Path.Combine(folder, "Test3_as_content.vert.hlsl.spv");
+            Assert.IsTrue(File.Exists(fileContent1), $"The file `{fileContent1}` was not found");
+            var fileContent2 = Path.Combine(folder, "SubFolder", "Test3_as_content.vert.hlsl.spv");
+            Assert.IsTrue(File.Exists(fileContent2), $"The file `{fileContent2}` was not found");
+        }
+
+        {
+            // Check tar file
+            var folder = project.GetBinaryFolder();
+            var fileTar = Path.Combine(folder, $"{project.Name}.CompiledShaders.tar.gz");
+            Assert.IsTrue(File.Exists(fileTar), $"The file `{fileTar}` was not found");
+
+            using var fileStream = File.OpenRead(fileTar);
+            using var gzStream = new GZipStream(fileStream, CompressionMode.Decompress, false);
+            using var tarReader = new TarReader(gzStream, false);
+
+            var expectingFiles = new HashSet<string>(StringComparer.Ordinal);
+            expectingFiles.Add("Test1_in_tar.vert.hlsl.spv");
+            expectingFiles.Add("Test2_in_tar.vert.hlsl.spv");
+            expectingFiles.Add("SubFolder/Test1_in_tar.vert.hlsl.spv");
+            expectingFiles.Add("SubFolder/Test2_in_tar.vert.hlsl.spv");
+            
+            TarEntry? entry;
+            StringBuilder? unexpectedEntries = null;
+            while ((entry = tarReader.GetNextEntry()) != null)
+            {
+                if (entry.EntryType == TarEntryType.RegularFile)
+                {
+                    if (expectingFiles.Contains(entry.Name))
+                    {
+                        expectingFiles.Remove(entry.Name);
+                    }
+                    else
+                    {
+                        unexpectedEntries ??= new StringBuilder();
+                        unexpectedEntries.AppendLine($"Unexpected entry `{entry.Name}` in the tar file");
+                    }
+                }
+            }
+
+            if (unexpectedEntries != null)
+            {
+                Assert.Fail(unexpectedEntries.ToString());
+            }
+        }
     }
 
     [ClassInitialize]
@@ -362,6 +420,8 @@ public class ShaderCompilerIntegrationTests
             _projectPath = PrepareProject(projectName);
         }
 
+        public string Name => _projectName;
+
         public BuildResult Build(string target = "Build", string configuration = "Debug")
         {
             return _builder.BuildProject(_projectPath, target, configuration);
@@ -408,6 +468,11 @@ public class ShaderCompilerIntegrationTests
 
         public string ProjectFolder => _projectFolder;
 
+        public string GetBinaryFolder(string configuration = "Debug")
+        {
+            return Path.Combine(_projectFolder, "bin", configuration, TargetFrameworkTestProjects);
+        }
+        
         public string GetGeneratedCSharpFile(string shaderName, string configuration = "Debug")
         {
             return Path.Combine(_projectFolder, "obj", configuration, TargetFrameworkTestProjects, "ShaderCompiler", "cs", $"{shaderName}.cs");
