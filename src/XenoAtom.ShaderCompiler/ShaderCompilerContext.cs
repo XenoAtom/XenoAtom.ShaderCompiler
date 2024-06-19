@@ -15,7 +15,10 @@ using static XenoAtom.Interop.libshaderc;
 
 namespace XenoAtom.ShaderCompiler;
 
-public unsafe partial class ShaderCompilerContext : IDisposable
+/// <summary>
+/// Internal class used to compile a single shader file.
+/// </summary>
+internal unsafe partial class ShaderCompilerContext : IDisposable
 {
     private readonly ShaderCompilerApp _app;
     private readonly HashSet<string> _includedFiles = new();
@@ -335,17 +338,17 @@ public unsafe partial class ShaderCompilerContext : IDisposable
             _includedFiles.Clear();
 
             var entryPoint = _app.EntryPoint ?? "main";
-            switch (mergedOptions.StageSelection ?? ShaderCompilerStageSelection.Default)
+            switch (mergedOptions.CompilerMode ?? ShaderCompilerMode.Default)
             {
-                case ShaderCompilerStageSelection.Default:
-                case ShaderCompilerStageSelection.PreprocessorAndCompile:
+                case ShaderCompilerMode.Default:
+                case ShaderCompilerMode.PreprocessorAndCompile:
                     result = shaderc_compile_into_spv(_compiler, shaderText, shaderKind, inputFileName, entryPoint, rcOptions);
                     break;
-                case ShaderCompilerStageSelection.PreprocessorOnly:
+                case ShaderCompilerMode.PreprocessorOnly:
                     defaultOutputExtension = null; // Only console output
                     result = shaderc_compile_into_preprocessed_text(_compiler, shaderText, shaderKind, inputFileName, entryPoint, rcOptions);
                     break;
-                case ShaderCompilerStageSelection.PreprocessorCompileAndDisassemble:
+                case ShaderCompilerMode.PreprocessorCompileAndDisassemble:
                     defaultOutputExtension = ".spvasm";
                     result = shaderc_compile_into_spv_assembly(_compiler, shaderText, shaderKind, inputFileName, entryPoint, rcOptions);
                     break;

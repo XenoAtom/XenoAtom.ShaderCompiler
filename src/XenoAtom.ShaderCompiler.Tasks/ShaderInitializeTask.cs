@@ -35,8 +35,6 @@ namespace XenoAtom.ShaderCompiler.Tasks
 
         public string? ShaderCompilerOption_output_kind { get; set; }
         
-        public string? ShaderCompilerOption_stage_selection { get; set;}
-
         public string? ShaderCompilerOption_entry_point { get; set;}
 
         public string? ShaderCompilerOption_source_language { get; set;}
@@ -108,7 +106,6 @@ namespace XenoAtom.ShaderCompiler.Tasks
                 ClassName = ToStringOpt(ShaderCompilerGlobalOption_class_name),
                 OutputKind = ToStringOpt(ShaderCompilerOption_output_kind),
                 
-                StageSelection = ToStringOpt(ShaderCompilerOption_stage_selection),
                 EntryPoint = ToStringOpt(ShaderCompilerOption_entry_point),
                 SourceLanguage = ToStringOpt(ShaderCompilerOption_source_language),
                 OptimizationLevel = ToStringOpt(ShaderCompilerOption_optimization_level),
@@ -170,7 +167,6 @@ namespace XenoAtom.ShaderCompiler.Tasks
                     OutputKind = ToStringOpt(inputItem.GetMetadata(nameof(ShaderCompilerOption_output_kind))),
 
                     Description = ToStringOpt(inputItem.GetMetadata(nameof(ShaderCompilerConstants.ShaderCompilerOption_description))),
-                    StageSelection = ToStringOpt(inputItem.GetMetadata(nameof(ShaderCompilerOption_stage_selection))),
                     EntryPoint = ToStringOpt(inputItem.GetMetadata(nameof(ShaderCompilerOption_entry_point))),
                     SourceLanguage = ToStringOpt(inputItem.GetMetadata(nameof(ShaderCompilerOption_source_language))),
                     OptimizationLevel = ToStringOpt(inputItem.GetMetadata(nameof(ShaderCompilerOption_optimization_level))),

@@ -4,7 +4,10 @@
 
 namespace XenoAtom.ShaderCompiler;
 
-public enum ShaderCompilerStageSelection
+/// <summary>
+/// Defines the stage selection for the shader compiler.
+/// </summary>
+public enum ShaderCompilerMode
 {
     /// <summary>
     /// If none of the above options is given, the compiler will run preprocessing, compiling, and linking stages.

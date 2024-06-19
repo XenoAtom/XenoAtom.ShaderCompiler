@@ -114,7 +114,6 @@
       ShaderCompilerGlobalOption_root_namespace="$(ShaderCompilerGlobalOption_root_namespace)"
       ShaderCompilerGlobalOption_class_name="$(ShaderCompilerGlobalOption_class_name)"
       ShaderCompilerOption_output_kind="$(ShaderCompilerOption_output_kind)"
-      ShaderCompilerOption_stage_selection = "$(ShaderCompilerOption_stage_selection)"
       ShaderCompilerOption_entry_point = "$(ShaderCompilerOption_entry_point)"
       ShaderCompilerOption_source_language = "$(ShaderCompilerOption_source_language)"
       ShaderCompilerOption_optimization_level = "$(ShaderCompilerOption_optimization_level)"

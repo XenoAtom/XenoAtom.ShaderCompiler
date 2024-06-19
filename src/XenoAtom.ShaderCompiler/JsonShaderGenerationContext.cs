@@ -6,6 +6,9 @@ using System.Text.Json.Serialization;
 
 namespace XenoAtom.ShaderCompiler;
 
+/// <summary>
+/// A Json serializer context for serializing <see cref="JsonShaderGlobalOptions"/>.
+/// </summary>
 [JsonSerializable(typeof(JsonShaderFile))]
 [JsonSerializable(typeof(JsonShaderFileOptions))]
 [JsonSerializable(typeof(JsonShaderGlobalOptions))]

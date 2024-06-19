@@ -80,19 +80,6 @@
   </EnumProperty>
 
   <EnumProperty
-      Name="ShaderCompilerOption_stage_selection"
-      DisplayName="Shader Kind"
-      Category="Shader"
-      Description="Specifies the kind of the shader and overrides #pragma shader_stage(), which overrides the file extension.">
-    <EnumValue Name="vertex" DisplayName="vertex" />
-    <EnumValue Name="fragment" DisplayName="fragment" />
-    <EnumValue Name="tesscontrol" DisplayName="tesscontrol" />
-    <EnumValue Name="tesseval" DisplayName="tesseval" />
-    <EnumValue Name="geometry" DisplayName="geometry" />
-    <EnumValue Name="compute" DisplayName="compute" />
-  </EnumProperty>
-
-  <EnumProperty
     Name="ShaderCompilerOption_source_language"
     DisplayName="Shader Language"
     Category="Shader"

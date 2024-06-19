@@ -8,40 +8,80 @@ using System.Formats.Tar;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Reflection.Metadata.Ecma335;
 using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace XenoAtom.ShaderCompiler;
 
+/// <summary>
+/// The main entry point for the shader compiler.
+/// </summary>
 public unsafe partial class ShaderCompilerApp : ShaderGlobalOptions, IDisposable
 {
     private readonly Dictionary<string, DateTime> _includeFilesLastWriteTime = new(OperatingSystem.IsWindows() ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal);
     private readonly Stack<ShaderCompilerContext> _contexts = new();
     private readonly List<(string RelativeSpvPath, string FullSpvPath, ShaderOutputKind OutputKind, bool Compiled)> _processedFiles = new();
-    
+
+    /// <summary>
+    /// Gets or sets the current directory used to resolve relative paths.
+    /// </summary>
     public string CurrentDirectory { get; set; } = Environment.CurrentDirectory;
 
+    /// <summary>
+    /// Gets or sets the batch file to use (optional).
+    /// </summary>
     public string? BatchFile { get; set; }
 
+    /// <summary>
+    /// Gets or sets the output file (only used in single file mode).
+    /// </summary>
     public string? OutputFile { get; set; }
 
+    /// <summary>
+    /// Gets or sets the IO function equivalent to <see cref="File.ReadAllText(string)"/>
+    /// </summary>
     public Func<string, string> FileReadAllText { get; set; } = File.ReadAllText;
 
+    /// <summary>
+    /// Gets or sets the IO function equivalent to <see cref="File.Exists(string)"/>
+    /// </summary>
     public Func<string, bool> FileExists { get; set; } = File.Exists;
 
+    /// <summary>
+    /// Gets or sets the IO function equivalent to <see cref="File.Create(string)"/>
+    /// </summary>
     public Func<string, Stream> FileCreate { get; set; } = File.Create;
 
+    /// <summary>
+    /// Gets or sets the IO function equivalent to <see cref="File.Delete(string)"/>
+    /// </summary>
     public Action<string> FileDelete { get; set; } = File.Delete;
 
+    /// <summary>
+    /// Gets or sets the IO function equivalent to <see cref="File.WriteAllBytes(string, byte[])"/>
+    /// </summary>
     public Action<string, byte[]> FileWriteAllBytes { get; set; } = File.WriteAllBytes;
 
+    /// <summary>
+    /// Gets or sets the IO function equivalent to <see cref="File.GetLastWriteTimeUtc(string)"/>
+    /// </summary>
     public Func<string, DateTime> FileGetLastWriteTimeUtc { get; set; } = File.GetLastWriteTimeUtc;
 
+    /// <summary>
+    /// Gets or sets the exception factory for the command line.
+    /// </summary>
     public Func<string, Exception>  GetCommandException { get; set; } = message => new InvalidOperationException(message);
 
+    /// <summary>
+    /// Gets or sets the exception factory for the options of the command line.
+    /// </summary>
     public Func<string, string, Exception> GetOptionException { get; set; } = (message, paramName) => new ArgumentException(message, paramName);
 
+    /// <summary>
+    /// Runs the shader compiler.
+    /// </summary>
+    /// <param name="output">The standard output to generate log/errors to.</param>
+    /// <returns>Zero for success; otherwise a non 0 value.</returns>
     public int Run(TextWriter output)
     {
         var inputFiles = InputFiles.ToList();

@@ -13,40 +13,94 @@ using XenoAtom.Interop;
 
 namespace XenoAtom.ShaderCompiler;
 
+/// <summary>
+/// Represents a shader file with options.
+/// </summary>
 public class ShaderFileOptions
 {
+    /// <summary>
+    /// Gets or sets the output kind (C#, tar, tar.gz...)
+    /// </summary>
     public ShaderOutputKind? OutputKind { get; set; }
 
-    public ShaderCompilerStageSelection? StageSelection { get; set; }
+    /// <summary>
+    /// Gets or sets the mode of the compiler (preprocessor only, compile & disassemble...)
+    /// </summary>
+    public ShaderCompilerMode? CompilerMode { get; set; }
 
+    /// <summary>
+    /// Gets or sets the entry point (e.g main).
+    /// </summary>
     public string? EntryPoint { get; set; }
 
+    /// <summary>
+    /// Gets or sets the source language (hlsl or glsl).
+    /// </summary>
     public libshaderc.shaderc_source_language? SourceLanguage { get; set; }
 
+    /// <summary>
+    /// Gets or sets the optimization level (O, O0, Os).
+    /// </summary>
     public libshaderc.shaderc_optimization_level? OptimizationLevel { get; set; }
 
+    /// <summary>
+    /// Gets or sets whether to invert Y (HLSL only)
+    /// </summary>
     public bool? InvertY { get; set; }
 
+    /// <summary>
+    /// Gets or sets the target environment (vulkan, opengl...)
+    /// </summary>
     public libshaderc.shaderc_env_version? TargetEnv { get; set; }
 
+    /// <summary>
+    /// Gets or sets the shader stage (vertex, fragment, compute...)
+    /// </summary>
     public libshaderc.shaderc_shader_kind? ShaderStage { get; set; }
 
+    /// <summary>
+    /// Gets or sets the target SPIR-V version.
+    /// </summary>
     public libshaderc.shaderc_spirv_version? TargetSpv { get; set; }
 
+    /// <summary>
+    /// Gets or sets whether to generate debug information.
+    /// </summary>
     public bool? GeneratedDebug { get; set; }
 
+    /// <summary>
+    /// Gets or sets whether to enable 16bit types for HLSL compilation.
+    /// </summary>
     public bool? Hlsl16BitTypes { get; set; }
 
+    /// <summary>
+    /// Gets or sets whether to use HLSL packing rules instead of GLSL rules when determining offsets of members of blocks.
+    /// </summary>
     public bool? HlslOffsets { get; set; }
 
+    /// <summary>
+    /// Gets or sets whether to enable extension SPV_GOOGLE_hlsl_functionality1.
+    /// </summary>
     public bool? HlslFunctionality1 { get; set; }
 
+    /// <summary>
+    /// Gets or sets whether to automatically assign locations to all shader inputs and outputs.
+    /// </summary>
     public bool? AutoMapLocations { get; set; }
 
+    /// <summary>
+    /// Gets or sets whether to automatically assign binding numbers to uniform variables, when an explicit binding is not specified in the shader source.
+    /// </summary>
     public bool? AutoBindUniforms { get; set; }
 
+    /// <summary>
+    /// Gets or sets whether to use HLSL IO mapping.
+    /// </summary>
     public bool? HlslIomap { get; set; }
 
+    /// <summary>
+    /// Gets the list of defines.
+    /// </summary>
     public List<ShaderMacro> Defines { get; } = new();
 
     /// <summary>
@@ -60,7 +114,7 @@ public class ShaderFileOptions
         stream.SetLength(0);
 
         Append(stream, OutputKind);
-        Append(stream, StageSelection);
+        Append(stream, CompilerMode);
         Append(stream, EntryPoint);
         Append(stream, SourceLanguage);
         Append(stream, OptimizationLevel);
@@ -88,42 +142,6 @@ public class ShaderFileOptions
         hash.Append(stream);
         return Unsafe.BitCast<UInt128, Guid>(hash.GetCurrentHashAsUInt128());
     }
-    
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static void Append(MemoryStream stream, string? value)
-    {
-        if (value is not null)
-        {
-            Append(stream, 1);
-            Append(stream, value.Length);
-            stream.Write(MemoryMarshal.AsBytes(value.AsSpan()));
-        }
-        else
-        {
-            Append(stream, 0);
-        }
-    }
-
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static void Append<T>(MemoryStream stream, T? value) where T : unmanaged
-    {
-        if (value.HasValue)
-        {
-            Append(stream, 1);
-            Append(stream, value.Value);
-        }
-        else
-        {
-            Append(stream, 0);
-        }
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static void Append<T>(MemoryStream stream, T value) where T: unmanaged
-    {
-        stream.Write(MemoryMarshal.Cast<T, byte>(MemoryMarshal.CreateSpan(ref value, 1)));
-    }
 
     /// <summary>
     /// Merge right options over left options.
@@ -139,7 +157,7 @@ public class ShaderFileOptions
         var result = new ShaderFileOptions
         {
             OutputKind = right.OutputKind ?? left.OutputKind,
-            StageSelection = right.StageSelection ?? left.StageSelection,
+            CompilerMode = right.CompilerMode ?? left.CompilerMode,
             EntryPoint = right.EntryPoint ?? left.EntryPoint,
             SourceLanguage = right.SourceLanguage ?? left.SourceLanguage,
             OptimizationLevel = right.OptimizationLevel ?? left.OptimizationLevel,
@@ -174,5 +192,41 @@ public class ShaderFileOptions
         }
         
         return result;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static void Append(MemoryStream stream, string? value)
+    {
+        if (value is not null)
+        {
+            Append(stream, 1);
+            Append(stream, value.Length);
+            stream.Write(MemoryMarshal.AsBytes(value.AsSpan()));
+        }
+        else
+        {
+            Append(stream, 0);
+        }
+    }
+
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static void Append<T>(MemoryStream stream, T? value) where T : unmanaged
+    {
+        if (value.HasValue)
+        {
+            Append(stream, 1);
+            Append(stream, value.Value);
+        }
+        else
+        {
+            Append(stream, 0);
+        }
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static void Append<T>(MemoryStream stream, T value) where T : unmanaged
+    {
+        stream.Write(MemoryMarshal.Cast<T, byte>(MemoryMarshal.CreateSpan(ref value, 1)));
     }
 }

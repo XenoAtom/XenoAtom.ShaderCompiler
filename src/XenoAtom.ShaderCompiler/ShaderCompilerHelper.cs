@@ -11,10 +11,22 @@ using System.Linq;
 
 namespace XenoAtom.ShaderCompiler
 {
+    /// <summary>
+    /// Helper class to generate a C# file from a SPIR-V binary.
+    /// </summary>
     public class ShaderCompilerHelper
     {
         private static readonly Regex RegexMatchNonIdentifierCharacters = new(@"[^\w]+", RegexOptions.Compiled);
 
+        /// <summary>
+        /// Generates a C# file from a SPIR-V binary.
+        /// </summary>
+        /// <param name="spv">The binary data of SPIR-V.</param>
+        /// <param name="csRelativeFilePath">The relative C# file path.</param>
+        /// <param name="csNamespace">The top level namespace.</param>
+        /// <param name="csClassName">The top level class name that will embed the SPIR-V binary.</param>
+        /// <param name="description">An optional description for the SPIR-V binary.</param>
+        /// <returns>A C# string representation of the SPIR-V binary, embeddable in a C# compilation pipeline.</returns>
         public static string GenerateCSharpFile(ReadOnlySpan<byte> spv, string csRelativeFilePath, string csNamespace, string csClassName, string? description)
         {
             var csNames = csRelativeFilePath.Split(new[] { '/', '\\' }, StringSplitOptions.RemoveEmptyEntries);

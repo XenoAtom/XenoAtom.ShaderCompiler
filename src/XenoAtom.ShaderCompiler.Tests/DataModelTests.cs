@@ -103,7 +103,7 @@ public class DataModelTests : VerifyBase
         options.IncludeDirectories.Add("include1");
         options.InputFiles.Add(new JsonShaderFile()
             {
-                StageSelection = "default",
+                CompilerMode = "default",
                 EntryPoint = "main",
                 Description = "This is a description",
                 SourceLanguage = "hlsl",

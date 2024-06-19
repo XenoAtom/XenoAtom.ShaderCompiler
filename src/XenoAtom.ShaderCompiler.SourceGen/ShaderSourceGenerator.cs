@@ -2,7 +2,6 @@
 // Licensed under the BSD-Clause 2 license.
 // See license.txt file in the project root for full license information.
 using System;
-using System.IO;
 using System.Threading;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
@@ -10,8 +9,11 @@ using Microsoft.CodeAnalysis.Text;
 
 namespace XenoAtom.ShaderCompiler.SourceGen
 {
+    /// <summary>
+    /// Source generator to include the SPIR-V binary as a C# file.
+    /// </summary>
     [Generator(LanguageNames.CSharp)]
-    public class ShaderSourceGenerator : IIncrementalGenerator
+    internal class ShaderSourceGenerator : IIncrementalGenerator
     {
         public const string BuildMetadataSourceGenMetadata = $"build_metadata.AdditionalFiles." + nameof(ShaderCompilerConstants.ShaderCompile_SourceGenerator);
         public const string BuildMetadataSourceRelativeCSharpFile = $"build_metadata.AdditionalFiles." + nameof(ShaderCompilerConstants.ShaderCompile_RelativePathCSharp);
@@ -58,7 +60,8 @@ namespace XenoAtom.ShaderCompiler.SourceGen
                             {
                                 sourceText = additionalText.GetText();
                             }
-                            
+                            // We generate an empty file if the sourceText is null
+                            // This happens when the IDE hasn't built anything, but we still want to generate a file with accessible properties for the shaders.
                             var text = sourceText != null ? sourceText.ToString() : ShaderCompilerHelper.GenerateCSharpFile(Array.Empty<byte>(), csRelativeFilePath, csNamespace, csClassName, null);
                             
                             return (csRelativeFilePath, text);

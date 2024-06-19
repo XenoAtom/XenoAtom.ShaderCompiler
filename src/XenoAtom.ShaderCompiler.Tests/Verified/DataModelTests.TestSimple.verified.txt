@@ -13,7 +13,7 @@
       "output-spv-path": "helloworld.spv",
       "output-deps-path": "helloworld.deps",
       "description": "This is a description",
-      "stage-selection": "default",
+      "compiler-mode": "default",
       "entry-point": "main",
       "source-language": "hlsl",
       "optimization-level": "Os",

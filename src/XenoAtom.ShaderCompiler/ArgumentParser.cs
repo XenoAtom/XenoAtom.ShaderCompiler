@@ -9,6 +9,9 @@ using static XenoAtom.Interop.libshaderc;
 
 namespace XenoAtom.ShaderCompiler;
 
+/// <summary>
+/// Internal class used for parsing command-line/Json properties.
+/// </summary>
 internal static class ArgumentParser
 {
     private static readonly Dictionary<string, shaderc_env_version> EnvVersionMap = new(StringComparer.Ordinal)
@@ -113,15 +116,15 @@ internal static class ArgumentParser
         };
     }
 
-    public static ShaderCompilerStageSelection ParseStageSelection(string stageSelection)
+    public static ShaderCompilerMode ParseCompilerMode(string compilerMode)
     {
-        return stageSelection switch
+        return compilerMode switch
         {
-            "default" => ShaderCompilerStageSelection.Default,
-            "preprocessor-and-compile" => ShaderCompilerStageSelection.PreprocessorAndCompile,
-            "preprocessor-only" => ShaderCompilerStageSelection.PreprocessorOnly,
-            "preprocessor-compile-and-disassemble" => ShaderCompilerStageSelection.PreprocessorCompileAndDisassemble,
-            _ => throw new ArgumentException($"Invalid stage selection: {stageSelection}. Valid values are: [default, preprocessor-and-compile, preprocessor-only, preprocessor-compile-and-disassemble]", "stage-selection"),
+            "default" => ShaderCompilerMode.Default,
+            "preprocessor-and-compile" => ShaderCompilerMode.PreprocessorAndCompile,
+            "preprocessor-only" => ShaderCompilerMode.PreprocessorOnly,
+            "preprocessor-compile-and-disassemble" => ShaderCompilerMode.PreprocessorCompileAndDisassemble,
+            _ => throw new ArgumentException($"Invalid stage selection: {compilerMode}. Valid values are: [default, preprocessor-and-compile, preprocessor-only, preprocessor-compile-and-disassemble]", "stage-selection"),
         };
     }
 

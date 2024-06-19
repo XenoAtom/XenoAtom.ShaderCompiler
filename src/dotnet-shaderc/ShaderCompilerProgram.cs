@@ -6,14 +6,24 @@ using XenoAtom.CommandLine;
 
 namespace XenoAtom.ShaderCompiler;
 
+/// <summary>
+/// Command-line program for the ShaderCompilerApp.
+/// </summary>
 public class ShaderCompilerProgram
 {
+    /// <summary>
+    /// Entry point for the ShaderCompilerProgram.
+    /// </summary>
     public static async Task<int> Main(string[] args)
     {
         var app = CreateCommandApp();
         return await app.RunAsync(args);
     }
 
+    /// <summary>
+    /// Creates a new instance of <see cref="CommandApp"/> for the ShaderCompilerApp.
+    /// </summary>
+    /// <param name="config">The configuration for the command line app.</param>
     public static CommandApp CreateCommandApp(CommandConfig? config = null)
     {
         const string _ = "";
@@ -52,15 +62,15 @@ public class ShaderCompilerProgram
             "Compilation Stage Selection Options:",
             {"c", "Run the preprocessing and compiling stage.", v =>
             {
-                if (v != null) app.StageSelection = ShaderCompilerStageSelection.PreprocessorAndCompile;
+                if (v != null) app.CompilerMode = ShaderCompilerMode.PreprocessorAndCompile;
             }},
             {"E", "Run the preprocessing stage.", v =>
             {
-                if (v != null) app.StageSelection = ShaderCompilerStageSelection.PreprocessorOnly;
+                if (v != null) app.CompilerMode = ShaderCompilerMode.PreprocessorOnly;
             }},
             {"S", "Run the preprocessing, compiling, and then disassembling stage.", v =>
             {
-                if (v != null) app.StageSelection = ShaderCompilerStageSelection.PreprocessorCompileAndDisassemble;
+                if (v != null) app.CompilerMode = ShaderCompilerMode.PreprocessorCompileAndDisassemble;
             }},
             _,
             "Preprocessor Options:",
