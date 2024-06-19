@@ -11,6 +11,9 @@ namespace XenoAtom.ShaderCompiler
 
         public const string ShaderCompilerTrackingName = "ShaderCompileFilesProvider";
 
+        // Internal option
+        public const string ShaderCompilerGlobalOption_test_empty_source_generator = nameof(ShaderCompilerGlobalOption_test_empty_source_generator);
+
         // Item Metadata
         public const string ShaderCompile_PathDeps = nameof(ShaderCompile_PathDeps);
         public const string ShaderCompile_SourceFile = nameof(ShaderCompile_SourceFile);

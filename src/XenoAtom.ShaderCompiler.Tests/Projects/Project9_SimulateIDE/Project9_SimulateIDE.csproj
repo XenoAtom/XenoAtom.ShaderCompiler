@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <!-- Allows to simulate the IDE running the source generator without building. Here it will force the source generator to generate an empty byte array for the SPV code -->
+    <ShaderCompilerGlobalOption_test_empty_source_generator>true</ShaderCompilerGlobalOption_test_empty_source_generator>
+  </PropertyGroup>
+</Project>

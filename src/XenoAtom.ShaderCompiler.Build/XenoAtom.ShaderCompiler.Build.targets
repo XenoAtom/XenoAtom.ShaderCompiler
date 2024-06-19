@@ -66,6 +66,8 @@
     <!-- Metadata that we pass from MSBuild to Roslyn Source Generator -->
     <CompilerVisibleProperty Include="ShaderCompilerGlobalOption_root_namespace" />
     <CompilerVisibleProperty Include="ShaderCompilerGlobalOption_class_name" />
+    <CompilerVisibleProperty Include="ShaderCompilerGlobalOption_test_empty_source_generator" />
+    
     <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="ShaderCompile_SourceGenerator"/>
     <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="ShaderCompile_RelativePathCSharp"/>
     <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="ShaderCompilerOption_output_kind"/>

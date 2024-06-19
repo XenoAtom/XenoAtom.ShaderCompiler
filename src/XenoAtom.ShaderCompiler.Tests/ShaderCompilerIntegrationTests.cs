@@ -61,9 +61,9 @@ public class ShaderCompilerIntegrationTests
                                        """;
 
     [TestMethod]
-    public void TestSingleShader()
+    public void Test_Project1_SingleShader()
     {
-        var project = _build.Load("Project1");
+        var project = _build.Load("Project1_SingleShader");
 
         const string shaderFile = "Test.vert.hlsl";
         const string shaderProperty = "Test_vert_hlsl";
@@ -94,9 +94,9 @@ public class ShaderCompilerIntegrationTests
     }
 
     [TestMethod]
-    public void TestMultipleShader()
+    public void Test_Project2_MultipleShaders()
     {
-        var project = _build.Load("Project2");
+        var project = _build.Load("Project2_MultipleShaders");
 
         const string shaderFile1 = "Test1.vert.hlsl";
         const string shaderProperty1 = "Test1_vert_hlsl";
@@ -125,9 +125,9 @@ public class ShaderCompilerIntegrationTests
     }
 
     [TestMethod]
-    public void TestShaderWithIncludes()
+    public void Test_Project3_ShaderWithIncludes()
     {
-        var project = _build.Load("Project3");
+        var project = _build.Load("Project3_ShaderWithIncludes");
 
         const string shaderFile = "Test_with_include.vert.hlsl";
         const string shaderProperty = "Test_with_include_vert_hlsl";
@@ -160,7 +160,7 @@ public class ShaderCompilerIntegrationTests
     }
 
     [TestMethod]
-    public void TestSystemInclude()
+    public void Test_Project5_WithIncludeDirectories()
     {
         var project = _build.Load("Project5_WithIncludeDirectories");
         project.BuildAndCheck(TaskExecutedWithShaderAndCSharpCompile);
@@ -177,23 +177,23 @@ public class ShaderCompilerIntegrationTests
     }
 
     [TestMethod]
-    public void TestDefinePerItem()
+    public void Test_Project6_WithDefinePerItem()
     {
         var project = _build.Load("Project6_WithDefinePerItem");
         project.BuildAndCheck(TaskExecutedWithShaderAndCSharpCompile);
     }
 
     [TestMethod]
-    public void TestDefineGlobal()
+    public void Test_Project7_WithDefine()
     {
         var project = _build.Load("Project7_WithDefine");
         project.BuildAndCheck(TaskExecutedWithShaderAndCSharpCompile);
     }
     
     [TestMethod]
-    public void TestInvalidShader()
+    public void Test_Project4_InvalidShader()
     {
-        var project = _build.Load("Project4");
+        var project = _build.Load("Project4_InvalidShader");
 
         var result = project.Build();
         Assert.AreNotEqual(BuildResultCode.Success, result.OverallResult, "The build should have failed");
@@ -216,6 +216,19 @@ public class ShaderCompilerIntegrationTests
     {
         var project = _build.Load("Project8_ContentOutput");
         project.BuildAndCheck(TaskExecutedWithShaderAndCSharpCompile);
+    }
+
+    [TestMethod]
+    public void Test_Project9_SimulateIDE()
+    {
+        var project = _build.Load("Project9_SimulateIDE");
+        project.BuildAndCheck(TaskExecutedWithShaderAndCSharpCompile);
+
+        {
+            using var shaderLoaderContext = project.LoadAssembly();
+            var compiledType = shaderLoaderContext.LoadCompiledShaders();
+            shaderLoaderContext.AssertShader(compiledType, "Test_vert_hlsl", assertZeroLength: true);
+        }
     }
 
     [ClassInitialize]
@@ -412,14 +425,21 @@ public class ShaderCompilerIntegrationTests
             Assert.IsTrue(File.Exists(assemblyPath), $"The assembly `{assemblyPath}` was not found");
         }
 
-        public void AssertShader(Type compiledShadersType, string shaderName)
+        public void AssertShader(Type compiledShadersType, string shaderName, bool assertZeroLength = false)
         {
             var property = compiledShadersType.GetProperty(shaderName, BindingFlags.Public | BindingFlags.Static);
             Assert.IsNotNull(property, $"The property `{shaderName}` was not found in the compiled shaders");
             var method = property.GetGetMethod();
             var getShaderDelegate = (GetShaderDelegate)method!.CreateDelegate<GetShaderDelegate>();
             var span = getShaderDelegate();
-            Assert.IsTrue(span.Length > 0, "The shader length is 0");
+            if (assertZeroLength)
+            {
+                Assert.AreEqual(0, span.Length, "Unexpected shader length");
+            }
+            else
+            {
+                Assert.AreNotEqual(0, span.Length, "Unexpected shader length");
+            }
         }
 
         public Type LoadCompiledShaders(string compiledTypeName = "CompiledShaders")

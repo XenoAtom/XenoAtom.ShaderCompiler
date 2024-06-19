@@ -6,15 +6,20 @@ using System.IO;
 using System.Threading;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
+using Microsoft.CodeAnalysis.Text;
 
 namespace XenoAtom.ShaderCompiler.SourceGen
 {
     [Generator(LanguageNames.CSharp)]
     public class ShaderSourceGenerator : IIncrementalGenerator
     {
-        public const string SourceGenMetadata = $"build_metadata.AdditionalFiles." + nameof(ShaderCompilerConstants.ShaderCompile_SourceGenerator);
-        public const string SourceRelativeCSharpFile = $"build_metadata.AdditionalFiles." + nameof(ShaderCompilerConstants.ShaderCompile_RelativePathCSharp);
-        public const string SourceOutputKind = $"build_metadata.AdditionalFiles." + nameof(ShaderCompilerConstants.ShaderCompilerOption_output_kind);
+        public const string BuildMetadataSourceGenMetadata = $"build_metadata.AdditionalFiles." + nameof(ShaderCompilerConstants.ShaderCompile_SourceGenerator);
+        public const string BuildMetadataSourceRelativeCSharpFile = $"build_metadata.AdditionalFiles." + nameof(ShaderCompilerConstants.ShaderCompile_RelativePathCSharp);
+        public const string BuildMetadataSourceOutputKind = $"build_metadata.AdditionalFiles." + nameof(ShaderCompilerConstants.ShaderCompilerOption_output_kind);
+        public const string BuildPropertyShaderRootNamespace = "build_property." + nameof(ShaderCompilerConstants.ShaderCompilerGlobalOption_root_namespace);
+        public const string BuildPropertyShaderClassName = "build_property." + nameof(ShaderCompilerConstants.ShaderCompilerGlobalOption_class_name);
+        public const string BuildPropertyTestEmptySourceGenerator = "build_property." + nameof(ShaderCompilerConstants.ShaderCompilerGlobalOption_test_empty_source_generator);
+
 
         //public const string LogPath = "C:\\code\\XenoAtom\\XenoAtom.ShaderCompiler\\src\\XenoAtom.ShaderCompiler.Tests\\obj\\Debug\\net8.0\\ShaderCompiler_SourceGenerator.log";
 
@@ -27,26 +32,33 @@ namespace XenoAtom.ShaderCompiler.SourceGen
                         var (additionalText, analyzerConfigOptions) = tuple;
                         var options = analyzerConfigOptions.GetOptions(additionalText);
 
-                        if (!options.TryGetValue(SourceOutputKind, out var outputKind) || !string.Equals(outputKind, "csharp", StringComparison.OrdinalIgnoreCase))
+                        if (!options.TryGetValue(BuildMetadataSourceOutputKind, out var outputKind) || !string.Equals(outputKind, "csharp", StringComparison.OrdinalIgnoreCase))
                         {
                             return ((string?)null, (string?)null);
                         }
 
-                        if (!analyzerConfigOptions.GlobalOptions.TryGetValue(nameof(ShaderCompilerConstants.ShaderCompilerGlobalOption_root_namespace), out var csNamespace) || string.IsNullOrEmpty(csNamespace))
+                        if (!analyzerConfigOptions.GlobalOptions.TryGetValue(BuildPropertyShaderRootNamespace, out var csNamespace) || string.IsNullOrEmpty(csNamespace))
                         {
                             csNamespace = "";
                         }
 
-                        if (!analyzerConfigOptions.GlobalOptions.TryGetValue(nameof(ShaderCompilerConstants.ShaderCompilerGlobalOption_class_name), out var csClassName) || string.IsNullOrEmpty(csClassName))
+                        if (!analyzerConfigOptions.GlobalOptions.TryGetValue(BuildPropertyShaderClassName, out var csClassName) || string.IsNullOrEmpty(csClassName))
                         {
                             csClassName = "CompiledShaders";
                         }
 
-                        if (options.TryGetValue(SourceGenMetadata, out var sourceGenEnabled) &&
+                        if (options.TryGetValue(BuildMetadataSourceGenMetadata, out var sourceGenEnabled) &&
                             string.Equals(sourceGenEnabled, "true", StringComparison.OrdinalIgnoreCase) &&
-                            options.TryGetValue(SourceRelativeCSharpFile, out var csRelativeFilePath) && !string.IsNullOrEmpty(csRelativeFilePath))
+                            options.TryGetValue(BuildMetadataSourceRelativeCSharpFile, out var csRelativeFilePath) && !string.IsNullOrEmpty(csRelativeFilePath))
                         {
-                            var sourceText = additionalText.GetText();
+                            SourceText? sourceText = null;
+                            // Used for internal testing (case of Incremental Source Generator without a build to simulate the behavior in the IDE)
+                            if (!analyzerConfigOptions.GlobalOptions.TryGetValue(BuildPropertyTestEmptySourceGenerator, out var testEmptySourceGen) ||
+                                !string.Equals(testEmptySourceGen, "true", StringComparison.OrdinalIgnoreCase))
+                            {
+                                sourceText = additionalText.GetText();
+                            }
+                            
                             var text = sourceText != null ? sourceText.ToString() : ShaderCompilerHelper.GenerateCSharpFile(Array.Empty<byte>(), csRelativeFilePath, csNamespace, csClassName, null);
                             
                             return (csRelativeFilePath, text);
