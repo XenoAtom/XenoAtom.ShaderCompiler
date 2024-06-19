@@ -5,11 +5,9 @@
 using System.Reflection;
 using System.Runtime.Loader;
 using System.Text;
-using Microsoft.Build.Evaluation;
 using Microsoft.Build.Execution;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Locator;
-using Microsoft.Build.Logging;
 
 namespace XenoAtom.ShaderCompiler.Tests;
 

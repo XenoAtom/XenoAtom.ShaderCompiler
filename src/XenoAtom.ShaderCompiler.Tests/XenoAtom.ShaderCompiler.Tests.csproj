@@ -11,10 +11,16 @@
 
   <ItemGroup>
     <None Remove="Projects\**\*.*" />
+    <None Remove="AppTests\**\*.*" />
+
     <Content Include="Projects\**\*.*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
 
+    <Content Include="AppTests\**\*.*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    
     <Content Include="..\XenoAtom.ShaderCompiler.Build\XenoAtom.ShaderCompiler.Build.targets">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Link>XenoAtom.ShaderCompiler.Build.targets</Link>

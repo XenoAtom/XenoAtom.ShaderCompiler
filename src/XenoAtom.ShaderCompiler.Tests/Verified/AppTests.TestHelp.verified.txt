@@ -1,0 +1,68 @@
+﻿Usage: dotnet-shaderc [Options] input_file+
+
+A command-line GLSL/HLSL to SPIR-V compiler with Clang-compatible arguments.
+
+Overall Options:
+
+  -h, -?, --help             Show this message and exit
+  -v, --version              Show the version of this command
+  -o=<output_file>           The SPIR-V <output_file>, expecting a single input
+                               file.
+      --batch=<file>         A batch <file> containing a JSON representation of
+                               the items to compile.
+      --generate-deps        Generates deps file used by build system.
+      --max-thread-count=<number>
+                             The maximum <number> of threads to use to compile
+                               all the inputs. Default is 0 (Maximum number of
+                               cores available)
+
+Language and Mode Selection Options:
+
+      --invert-y             Invert the Y axis of the coordinate system.
+      --shader-stage=<stage> lets you specify the shader <stage> for one or
+                               more inputs from the command line. Possible
+                               values are: anyhit, callable, closesthit,
+                               compute, fragment, geometry, intersection, miss,
+                               raygen, tesscontrol, tesseval, vertex.
+      --target-env=<value>   The target environment <value> for the shader.
+                               Possible values are: opengl, opengl4.5, vulkan,
+                               vulkan1.0, vulkan1.1, vulkan1.2.
+      --target-spv=<version> Specify the SPIR-V <version> to be used by the
+                               generated module. Possible values are: spv1.0,
+                               spv1.1, spv1.2, spv1.3, spv1.4, spv1.5, spv1.6.
+  -x=<lang>                  specify the <lang> of the input shader files.
+                               Possible values are: glsl, hlsl.
+
+Compilation Stage Selection Options:
+  -c                         Run the preprocessing and compiling stage.
+  -E                         Run the preprocessing stage.
+  -S                         Run the preprocessing, compiling, and then
+                               disassembling stage.
+
+Preprocessor Options:
+  -D, --define[=name:value]  Add a macro name and an optional value
+  -I, --include-dir=<directory>
+                             Adds the specified <directory> to the search path
+                               for include files.
+
+Code Generation Options:
+
+  -g                         Generate debug information.
+  -O[=VALUE]                 -O0 No optimization. This level generates the most
+                               debuggable code. -Os Enables optimizations to
+                               reduce code size. -O The default optimization
+                               level for better performance.
+      --hlsl-16bit-types     Enables 16bit types for HLSL compilation.
+      --hlsl-offsets         Use HLSL packing rules instead of GLSL rules when
+                               determining offsets of members of blocks. This
+                               option is always on when compiling for HLSL.
+      --hlsl-functionality1  Enable extension SPV_GOOGLE_hlsl_functionality1.
+      --entry-point=<name>   The entry point function <name>.
+      --auto-map-locations   Automatically assign locations to all shader
+                               inputs and outputs. For HLSL compilation, this
+                               option is on by default.
+      --auto-bind-uniforms   Directs the compiler to automatically assign
+                               binding numbers to uniform variables, when an
+                               explicit binding is not specified in the shader
+                               source.
+  @file                      Read response file for more options.

@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using static XenoAtom.Interop.libshaderc;
-using XenoAtom.CommandLine;
 
 namespace XenoAtom.ShaderCompiler;
 
@@ -55,6 +54,14 @@ internal static class ArgumentParser
         { "hlsl", shaderc_source_language.shaderc_source_language_hlsl },
     };
 
+    public static string[] TargetEnvValues => EnvVersionMap.Keys.Order(StringComparer.Ordinal).ToArray();
+
+    public static string[] TargetSpvValues => SpirvVersionMap.Keys.Order(StringComparer.Ordinal).ToArray();
+
+    public static string[] ShaderKindValues => ShaderKindMap.Keys.Order(StringComparer.Ordinal).ToArray();
+
+    public static string[] SourceLanguageValues => SourceLanguageMap.Keys.Order(StringComparer.Ordinal).ToArray();
+
     public static shaderc_env_version ParseTargetEnv(string targetEnv)
     {
         if (EnvVersionMap.TryGetValue(targetEnv, out var envVersion))
@@ -62,7 +69,7 @@ internal static class ArgumentParser
             return envVersion;
         }
 
-        throw new OptionException($"Invalid target environment: {targetEnv}. Valid values are: [{string.Join(", ", EnvVersionMap.Keys.Order(StringComparer.Ordinal))}]", "target-env");
+        throw new ArgumentException($"Invalid target environment: {targetEnv}. Valid values are: [{string.Join(", ", EnvVersionMap.Keys.Order(StringComparer.Ordinal))}]", "target-env");
     }
 
     public static shaderc_spirv_version ParseTargetSpv(string targetSpv)
@@ -72,7 +79,7 @@ internal static class ArgumentParser
             return spvVersion;
         }
 
-        throw new OptionException($"Invalid target SPIR-V version: {targetSpv}. Valid values are: [{string.Join(", ", SpirvVersionMap.Keys.Order(StringComparer.Ordinal))}]", "target-spv");
+        throw new ArgumentException($"Invalid target SPIR-V version: {targetSpv}. Valid values are: [{string.Join(", ", SpirvVersionMap.Keys.Order(StringComparer.Ordinal))}]", "target-spv");
     }
 
     public static shaderc_shader_kind ParseShaderStage(string shaderKind)
@@ -82,7 +89,7 @@ internal static class ArgumentParser
             return kind;
         }
 
-        throw new OptionException($"Invalid shader kind: {shaderKind}. Valid values are: [{string.Join(", ", ShaderKindMap.Keys.Order(StringComparer.Ordinal))}]", "fshader-stage");
+        throw new ArgumentException($"Invalid shader kind: {shaderKind}. Valid values are: [{string.Join(", ", ShaderKindMap.Keys.Order(StringComparer.Ordinal))}]", "fshader-stage");
     }
 
     public static shaderc_source_language ParseSourceLanguage(string sourceLanguage)
@@ -92,7 +99,7 @@ internal static class ArgumentParser
             return language;
         }
 
-        throw new OptionException($"Invalid source language: {sourceLanguage}. Valid values are: [{string.Join(", ", SourceLanguageMap.Keys.Order(StringComparer.Ordinal))}]", "source-language");
+        throw new ArgumentException($"Invalid source language: {sourceLanguage}. Valid values are: [{string.Join(", ", SourceLanguageMap.Keys.Order(StringComparer.Ordinal))}]", "source-language");
     }
 
     public static shaderc_optimization_level? ParseOptimizationLevel(string optimizationLevel)
@@ -114,7 +121,7 @@ internal static class ArgumentParser
             "preprocessor-and-compile" => ShaderCompilerStageSelection.PreprocessorAndCompile,
             "preprocessor-only" => ShaderCompilerStageSelection.PreprocessorOnly,
             "preprocessor-compile-and-disassemble" => ShaderCompilerStageSelection.PreprocessorCompileAndDisassemble,
-            _ => throw new OptionException($"Invalid stage selection: {stageSelection}. Valid values are: [default, preprocessor-and-compile, preprocessor-only, preprocessor-compile-and-disassemble]", "stage-selection"),
+            _ => throw new ArgumentException($"Invalid stage selection: {stageSelection}. Valid values are: [default, preprocessor-and-compile, preprocessor-only, preprocessor-compile-and-disassemble]", "stage-selection"),
         };
     }
 
@@ -126,7 +133,7 @@ internal static class ArgumentParser
             "tar" => ShaderOutputKind.Tar,
             "tar.gz" => ShaderOutputKind.TarGz,
             "content" => ShaderOutputKind.Content,
-            _ => throw new OptionException($"Invalid output kind: {outputKind}. Valid values are: [csharp, tar, tar.gz, content]", "output-kind"),
+            _ => throw new ArgumentException($"Invalid output kind: {outputKind}. Valid values are: [csharp, tar, tar.gz, content]", "output-kind"),
         };
     }
 }

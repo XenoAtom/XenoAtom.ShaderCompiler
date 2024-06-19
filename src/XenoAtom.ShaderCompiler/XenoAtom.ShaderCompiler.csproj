@@ -50,7 +50,6 @@
   <ItemGroup>
     <PackageReference Include="Silk.NET.Shaderc.Native" Version="2.21.0" />
     <PackageReference Include="System.IO.Hashing" Version="8.0.0" />
-    <PackageReference Include="XenoAtom.CommandLine" Version="1.0.1" />
     <PackageReference Include="XenoAtom.Interop.libshaderc" Version="1.0.0-alpha.1" />
   </ItemGroup>
 

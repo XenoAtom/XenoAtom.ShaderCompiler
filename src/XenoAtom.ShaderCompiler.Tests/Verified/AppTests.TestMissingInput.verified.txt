@@ -1,0 +1,2 @@
+﻿dotnet-shaderc: Error: Expecting an input file
+Use `dotnet-shaderc --help` for usage.

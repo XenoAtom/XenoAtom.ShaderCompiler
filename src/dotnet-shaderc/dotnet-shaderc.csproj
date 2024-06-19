@@ -28,6 +28,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="..\XenoAtom.ShaderCompiler\ArgumentParser.cs" Link="ArgumentParser.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)../../img/XenoAtom.ShaderCompiler.png" Pack="true" PackagePath="/" />
     <None Include="$(MSBuildThisFileDirectory)../../readme.md" Pack="true" PackagePath="/" />
   </ItemGroup>
@@ -37,6 +41,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="XenoAtom.CommandLine" Version="1.0.1" />
     <PackageReference Include="MinVer" Version="5.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

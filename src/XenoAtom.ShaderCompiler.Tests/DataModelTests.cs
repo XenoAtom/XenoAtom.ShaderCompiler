@@ -28,7 +28,7 @@ public class DataModelTests : VerifyBase
         // Compare serialize and deserialize
         Assert.AreEqual(json, json2);
 
-        var settings = CreateVerifySettings();
+        var settings = SharedVerify.CreateVerifySettings();
         await Verify(json, settings);
     }
 
@@ -126,13 +126,5 @@ public class DataModelTests : VerifyBase
             }
         );
         return options;
-    }
-
-    static VerifySettings CreateVerifySettings()
-    {
-        var settings = new VerifySettings();
-        settings.UseDirectory("Verified");
-        settings.DisableDiff();
-        return settings;
     }
 }

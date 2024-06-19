@@ -77,13 +77,13 @@ public unsafe partial class ShaderCompilerContext : IDisposable
         string? outputSpvPath = null;
         if (shaderFile.OutputSpvPath != null)
         {
-            outputSpvPath = Path.Combine(_app.CacheDirectory!, shaderFile.OutputSpvPath);
+            outputSpvPath = _app.CacheDirectory != null ? Path.Combine(_app.CacheDirectory, shaderFile.OutputSpvPath) : shaderFile.OutputSpvPath;
         }
 
         string? outputDepsPath = null;
         if (_app.GenerateDepsFile && shaderFile.OutputDepsPath != null)
         {
-            outputDepsPath = Path.Combine(_app.CacheDirectory!, shaderFile.OutputDepsPath);
+            outputDepsPath = _app.CacheDirectory != null ? Path.Combine(_app.CacheDirectory, shaderFile.OutputDepsPath) : shaderFile.OutputDepsPath;
         }
         
         bool compileShader = false;
@@ -432,10 +432,6 @@ public unsafe partial class ShaderCompilerContext : IDisposable
                         if (string.IsNullOrEmpty(depsFile))
                         {
                             depsFile = Path.ChangeExtension(outputFile, ".deps");
-                        }
-                        else
-                        {
-                            depsFile = Path.Combine(_app.CacheDirectory!, depsFile);
                         }
 
                         var depsContentBuilder = new StringBuilder();

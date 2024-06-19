@@ -8,7 +8,6 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using XenoAtom.CommandLine;
 
 namespace XenoAtom.ShaderCompiler;
 
@@ -30,87 +29,10 @@ public unsafe partial class ShaderCompilerApp : ShaderGlobalOptions, IDisposable
     public Action<string, byte[]> FileWriteAllBytes { get; set; } = File.WriteAllBytes;
 
     public Func<string, DateTime> FileGetLastWriteTimeUtc { get; set; } = File.GetLastWriteTimeUtc;
-    
-    public static CommandApp CreateCommandApp(CommandConfig? config = null)
-    {
-        const string _ = "";
-        var app = new ShaderCompilerApp();
-        var inputFileNames = new List<string>();
-        var commandApp = new CommandApp("dotnet-shaderc", config: config)
-        {
-            _,
-            "A command-line GLSL/HLSL to SPIR-V compiler with Clang-compatible arguments.",
-            _,
-            "Overall Options:",
-            _,
-            new HelpOption(),
-            new VersionOption(),
-            {"o=", "The SPIR-V {<output_file>}, expecting a single input file.", v => app.OutputFile = v},
-            {"batch=", "A batch {<file>} containing a JSON representation of the items to compile.", v => app.BatchFile = v},
-            {"generate-deps", "Generates deps file used by build system.", v => app.GenerateDepsFile = v != null },
-            {"max-thread-count=", $"The maximum {{<number>}} of threads to use to compile all the inputs. Default is 0 (number of cores available = {Environment.ProcessorCount})", (int threadCount) =>
-                {
-                    app.MaxThreadCount = threadCount;
-                }
-            },
-            _,
-            "Language and Mode Selection Options:",
-            _,
-            {"invert-y", "Invert the Y axis of the coordinate system.", v => app.InvertY = v != null},
-            {"shader-stage=", "lets you specify the shader {<stage>} for one or more inputs from the command line.", v => app.ShaderStage = ArgumentParser.ParseShaderStage(v!)},
-            {"target-env=", "The target environment for the shader.", v => app.TargetEnv = ArgumentParser.ParseTargetEnv(v!)},
-            {"target-spv=", "Specify the SPIR-V version to be used by the generated module.", v => app.TargetSpv = ArgumentParser.ParseTargetSpv(v!)},
-            {"x=", "specify the {<lang>} of the input shader files. Valid languages are glsl and hlsl. ", v => app.SourceLanguage = ArgumentParser.ParseSourceLanguage(v!)},
-            _,
-            "Compilation Stage Selection Options:",
-            {"c", "Run the preprocessing and compiling stage.", v =>
-            {
-                if (v != null) app.StageSelection = ShaderCompilerStageSelection.PreprocessorAndCompile;
-            }},
-            {"E", "Run the preprocessing stage.", v =>
-            {
-                if (v != null) app.StageSelection = ShaderCompilerStageSelection.PreprocessorOnly;
-            }},
-            {"S", "Run the preprocessing, compiling, and then disassembling stage.", v =>
-            {
-                if (v != null) app.StageSelection = ShaderCompilerStageSelection.PreprocessorCompileAndDisassemble;
-            }},
-            _,
-            "Preprocessor Options:",
-            { "D=", "Add a marco {0:name} and an optional {1:value}", (k, v) => app.Defines.Add(new(k, v)) },
-            { "I=", "Adds the specified {<directory>} to the search path for include files.", app.IncludeDirectories },
-            _,
-            "Code Generation Options:",
-            _,
-            {"g", "Generate debug information.", v => app.GeneratedDebug = v != null},
-            {"O:", "-O0 No optimization. This level generates the most debuggable code. -Os Enables optimizations to reduce code size. -O The default optimization level for better performance.", v =>
-                {
-                    if (v == "0") app.OptimizationLevel = XenoAtom.Interop.libshaderc.shaderc_optimization_level.shaderc_optimization_level_zero;
-                    if (v == "s") app.OptimizationLevel = XenoAtom.Interop.libshaderc.shaderc_optimization_level.shaderc_optimization_level_size;
-                    if (v != null) app.OptimizationLevel = XenoAtom.Interop.libshaderc.shaderc_optimization_level.shaderc_optimization_level_performance;
-                }
-            },
-            {"hlsl-16bit-types", "Enables 16bit types for HLSL compilation.", v => app.Hlsl16BitTypes = v != null},
-            {"hlsl-offsets", "Use HLSL packing rules instead of GLSL rules when determining offsets of members of blocks. This option is always on when compiling for HLSL.", v => app.HlslOffsets = v != null},
-            {"hlsl-functionality1", "Enable extension SPV_GOOGLE_hlsl_functionality1.", v => app.HlslFunctionality1 = v != null},
-            {"entry-point=", "The entry point function {<name>}.", v => app.EntryPoint = v!},
-            {"auto-map-locations", "Automatically assign locations to all shader inputs and outputs. For HLSL compilation, this option is on by default.", v => app.AutoMapLocations = v != null},
-            { "<>", "input_file+", inputFileNames },
-            new ResponseFileSource(),
-            // Run the command
-            (CommandRunContext context, string[] _) =>
-            {
-                app.InputFiles.AddRange(inputFileNames.Select(x => new ShaderFile(x)
-                {
-                    OutputSpvPath = app.OutputFile
-                }));
 
-                return ValueTask.FromResult(app.Run(context.Out));
-            }
-        };
+    public Func<string, Exception>  GetCommandException { get; set; } = message => new InvalidOperationException(message);
 
-        return commandApp;
-    }
+    public Func<string, string, Exception> GetOptionException { get; set; } = (message, paramName) => new ArgumentException(message, paramName);
 
     public int Run(TextWriter output)
     {
@@ -123,7 +45,7 @@ public unsafe partial class ShaderCompilerApp : ShaderGlobalOptions, IDisposable
             var batchOptionsJson = JsonSerializer.Deserialize(batchFileContent, JsonShaderGenerationContext.Default.JsonShaderGlobalOptions);
             if (batchOptionsJson == null)
             {
-                throw new CommandException($"Error: Unable to parse the batch file `{BatchFile}`");
+                throw GetCommandException($"Error: Unable to parse the batch file `{BatchFile}`");
             }
             var batchOptions = batchOptionsJson.ToRuntime();
 
@@ -142,7 +64,7 @@ public unsafe partial class ShaderCompilerApp : ShaderGlobalOptions, IDisposable
 
             if (CacheDirectory == null)
             {
-                throw new CommandException("Error: Expecting a cache directory when using a batch file");
+                throw GetCommandException("Error: Expecting a cache directory when using a batch file");
             }
 
             if (!Directory.Exists(CacheDirectory))
@@ -153,12 +75,12 @@ public unsafe partial class ShaderCompilerApp : ShaderGlobalOptions, IDisposable
 
         if (inputFiles.Count == 0)
         {
-            throw new CommandException("Error: Expecting an input file");
+            throw GetCommandException("Error: Expecting an input file");
         }
 
         if (inputFiles.Count > 1 && OutputFile != null)
         {
-            throw new OptionException("Error: Cannot use an output file with multiple input files", "o");
+            throw GetOptionException($"Error: Cannot use an output file with multiple input files. Input files = [{string.Join(", ", inputFiles)}]", "o");
         }
         
         int runResult = 0;
