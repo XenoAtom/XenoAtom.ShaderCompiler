@@ -160,6 +160,12 @@ public unsafe partial class ShaderCompilerContext : IDisposable
 
         checkCompileShader:
 
+        // Notify what we have been compiled (for tar/tar.gz postprocessing)
+        if (outputKind.HasValue && outputSpvPath != null && shaderFile.OutputSpvPath != null)
+        {
+            App.AddProcessedFile(shaderFile.OutputSpvPath, outputSpvPath, outputKind.Value, compileShader);
+        }
+
         // Do we need to compile the shader?
         if (!compileShader)
         {

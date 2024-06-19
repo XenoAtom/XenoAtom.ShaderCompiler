@@ -4,8 +4,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Formats.Tar;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -15,7 +18,8 @@ public unsafe partial class ShaderCompilerApp : ShaderGlobalOptions, IDisposable
 {
     private readonly Dictionary<string, DateTime> _includeFilesLastWriteTime = new(OperatingSystem.IsWindows() ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal);
     private readonly Stack<ShaderCompilerContext> _contexts = new();
-
+    private readonly List<(string RelativeSpvPath, string FullSpvPath, ShaderOutputKind OutputKind, bool Compiled)> _processedFiles = new();
+    
     public string CurrentDirectory { get; set; } = Environment.CurrentDirectory;
 
     public string? BatchFile { get; set; }
@@ -25,6 +29,10 @@ public unsafe partial class ShaderCompilerApp : ShaderGlobalOptions, IDisposable
     public Func<string, string> FileReadAllText { get; set; } = File.ReadAllText;
 
     public Func<string, bool> FileExists { get; set; } = File.Exists;
+
+    public Func<string, Stream> FileCreate { get; set; } = File.Create;
+
+    public Action<string> FileDelete { get; set; } = File.Delete;
 
     public Action<string, byte[]> FileWriteAllBytes { get; set; } = File.WriteAllBytes;
 
@@ -59,6 +67,7 @@ public unsafe partial class ShaderCompilerApp : ShaderGlobalOptions, IDisposable
             Incremental = batchOptions.Incremental;
             RootNamespace = batchOptions.RootNamespace;
             ClassName = batchOptions.ClassName;
+            ClassName = ClassName ?? "CompiledShaders";
             OutputKind = batchOptions.OutputKind;
             mergedOptionsBase = ShaderFileOptions.Merge(mergedOptionsBase, batchOptions);
 
@@ -135,6 +144,9 @@ public unsafe partial class ShaderCompilerApp : ShaderGlobalOptions, IDisposable
                         }
                     });
             }
+
+            // Process remaining tar files
+            ProcessTar();
         }
         finally
         {
@@ -144,9 +156,119 @@ public unsafe partial class ShaderCompilerApp : ShaderGlobalOptions, IDisposable
             {
                 _includeFilesLastWriteTime.Clear();
             }
+
+            lock (_processedFiles)
+            {
+                _processedFiles.Clear();
+            }
         }
 
         return runResult;
+    }
+
+    private void ProcessTar()
+    {
+        // Only supported in batch mode
+        if (CacheDirectory is null) return;
+
+        // Collect all files to be included in the tar file
+        bool hasNewCompiled = false;
+        var tarFiles = new List<(string RelativePath, string SourcePath)>();
+        ShaderOutputKind? outputKind = null;
+        lock (_processedFiles)
+        {
+            foreach (var processedFile in _processedFiles)
+            {
+                if (processedFile.OutputKind != ShaderOutputKind.Tar && processedFile.OutputKind != ShaderOutputKind.TarGz)
+                {
+                    continue;
+                }
+
+                if (processedFile.Compiled)
+                {
+                    hasNewCompiled = true;
+                }
+
+                var normalizedRelativeSpvPath = processedFile.RelativeSpvPath.Replace("\\", "/");
+                tarFiles.Add((normalizedRelativeSpvPath, processedFile.FullSpvPath));
+
+                if (!outputKind.HasValue)
+                {
+                    outputKind = processedFile.OutputKind;
+                }
+                else if (outputKind != processedFile.OutputKind)
+                {
+                    throw GetCommandException("Error: Cannot mix tar and tar.gz files");
+                }
+            }
+        }
+
+        // Tar file name
+        var tarFile = Path.Combine(CacheDirectory!, $"{(string.IsNullOrEmpty(RootNamespace) ? "" : $"{RootNamespace}.")}{ClassName}{(outputKind == ShaderOutputKind.Tar ? ".tar" : ".tar.gz")}");
+        if (tarFiles.Count == 0)
+        {
+            if (FileExists(tarFile))
+            {
+                FileDelete(tarFile);
+            }
+            return;
+        }
+
+
+        if (!hasNewCompiled && FileExists(tarFile))
+        {
+            return;
+        }
+
+        using var tarStream = FileCreate(tarFile);
+        var outputTarStream = (Stream)tarStream;
+        try
+        {
+
+            if (outputKind == ShaderOutputKind.TarGz)
+            {
+                outputTarStream = new GZipStream(tarStream, CompressionLevel.Optimal, true);
+            }
+
+            using var tarWriter = new TarWriter(outputTarStream, TarEntryFormat.Pax, true);
+            var directories = new HashSet<string>(StringComparer.Ordinal);
+
+            tarFiles.Sort((a, b) => string.Compare(a.RelativePath, b.RelativePath, StringComparison.Ordinal));
+            foreach (var (relativePath, sourcePath) in tarFiles)
+            {   
+                var directory = Path.GetDirectoryName(relativePath);
+                if (!string.IsNullOrEmpty(directory))
+                {
+                    var splitDirectory = directory.Split("/", StringSplitOptions.RemoveEmptyEntries);
+                    for (int i = 0; i < splitDirectory.Length; i++)
+                    {
+                        var subDirectory = $"{string.Join("/", splitDirectory.Take(i + 1))}/";
+                        if (directories.Contains(subDirectory))
+                        {
+                            continue;
+                        }
+
+                        var dirEntry = new PaxTarEntry(TarEntryType.Directory, subDirectory);
+                        tarWriter.WriteEntry(dirEntry);
+                        directories.Add(subDirectory);
+                    }
+                }
+
+                var fileEntry = new PaxTarEntry(TarEntryType.RegularFile, relativePath);
+                using var fileStream = File.OpenRead(sourcePath);
+                fileEntry.DataStream = fileStream;
+
+                tarWriter.WriteEntry(fileEntry);
+            }
+
+        }
+        finally
+        {
+            if (outputTarStream != tarStream)
+            {
+                outputTarStream.Dispose();
+            }
+        }
     }
 
     internal ShaderCompilerContext GetOrCreateCompilerContext()
@@ -168,6 +290,14 @@ public unsafe partial class ShaderCompilerApp : ShaderGlobalOptions, IDisposable
         lock(_contexts)
         {
             _contexts.Push(context);
+        }
+    }
+
+    internal void AddProcessedFile(string relativeOutputSpv, string outputSpv, ShaderOutputKind outputKind, bool compiled)
+    {
+        lock (_processedFiles)
+        {
+            _processedFiles.Add((relativeOutputSpv, outputSpv, outputKind, compiled));
         }
     }
 

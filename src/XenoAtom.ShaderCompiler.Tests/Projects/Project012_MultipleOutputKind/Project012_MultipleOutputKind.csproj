@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ShaderCompile Update="**/*_in_tar.vert.hlsl">
+      <ShaderCompilerOption_output_kind>tar.gz</ShaderCompilerOption_output_kind>
+    </ShaderCompile>
+    <ShaderCompile Update="**/*_as_content.vert.hlsl">
+      <ShaderCompilerOption_output_kind>content</ShaderCompilerOption_output_kind>
+    </ShaderCompile>
+  </ItemGroup>
+</Project>

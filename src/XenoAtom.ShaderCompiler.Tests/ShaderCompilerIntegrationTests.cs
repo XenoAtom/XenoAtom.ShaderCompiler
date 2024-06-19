@@ -257,6 +257,13 @@ public class ShaderCompilerIntegrationTests
         StringAssert.Contains(csText, "/// This is a custom description of this shader.");
         StringAssert.Contains(csText, "/// </summary>");
     }
+    
+    [TestMethod]
+    public void Test_Project012_MultipleOutputKind()
+    {
+        var project = _build.Load("Project012_MultipleOutputKind");
+        project.BuildAndCheck(TaskExecutedWithShaderAndCSharpCompile);
+    }
 
     [ClassInitialize]
     public static void ClassInitialize(TestContext context)
