@@ -181,4 +181,12 @@ For HLSL compilation, this option is on by default."
     DisplayName="HLSL I/O Map"
     Category="Shader"
     Visible="True" />
+
+  <StringProperty
+    Name="ShaderCompilerOption_description"
+    DisplayName="Description"
+    Category="Shader"
+    Visible="True"
+    Description="Specifies the description of this shader. The description will be used to generate a property summary description in the generated C# API.">
+  </StringProperty>
 </Rule>

@@ -245,6 +245,21 @@ public class ShaderCompilerIntegrationTests
         }
     }
 
+    [TestMethod]
+    public void Test_Project011_WithDescription()
+    {
+        var project = _build.Load("Project011_WithDescription");
+        project.BuildAndCheck(TaskExecutedWithShaderAndCSharpCompile);
+
+        var csGeneratedFile = project.GetGeneratedCSharpFile("Test.vert.hlsl");
+        Assert.IsTrue(File.Exists(csGeneratedFile), $"The file `{csGeneratedFile}` was not found");
+
+        var csText = File.ReadAllText(csGeneratedFile);
+        StringAssert.Contains(csText, "/// <summary>");
+        StringAssert.Contains(csText, "/// This is a custom description of this shader.");
+        StringAssert.Contains(csText, "/// </summary>");
+    }
+
     [ClassInitialize]
     public static void ClassInitialize(TestContext context)
     {
@@ -387,6 +402,13 @@ public class ShaderCompilerIntegrationTests
         }
 
         public string ProjectFolder => _projectFolder;
+
+        public string GetGeneratedCSharpFile(string shaderName, string configuration = "Debug")
+        {
+            return Path.Combine(_projectFolder, "obj", configuration, TargetFrameworkTestProjects, "ShaderCompiler", "cs", $"{shaderName}.cs");
+        }
+
+        public string GetShaderCompilerIntermediateOutputFolder(string configuration = "Debug") => Path.Combine(_projectFolder, "obj", configuration, TargetFrameworkTestProjects, "ShaderCompiler");
 
         private string PrepareProject(string projectName)
         {

@@ -38,24 +38,29 @@ namespace XenoAtom.ShaderCompiler
                 builder.OpenBlock();
                 for (int i = 0; i < csNames.Length - 1; i++)
                 {
-                    // Append the description
-                    if (description != null)
-                    {
-                        var descriptionLines = description.Split(["\r\n", "\r", "\n"], StringSplitOptions.RemoveEmptyEntries);
-
-                        builder.AppendLine("/// <summary>");
-                        foreach (var descriptionLine in descriptionLines)
-                        {
-                            builder.AppendLine($"/// {descriptionLine}");
-                        }
-                        builder.AppendLine("/// </summary>");
-                    }
-
                     builder.AppendLine($"public static partial class {csNames[i]}");
                     builder.OpenBlock();
                 }
                 var csFinalName = csNames[^1];
+
+                // Append the description
+                if (description != null)
+                {
+                    var descriptionLines = description.Split(["\r\n", "\r", "\n"], StringSplitOptions.RemoveEmptyEntries);
+
+                    builder.AppendLine("/// <summary>");
+                    foreach (var descriptionLine in descriptionLines)
+                    {
+                        builder.AppendLine($"/// {descriptionLine}");
+                    }
+                    builder.AppendLine("/// </summary>");
+                }
+
+                builder.AppendLine("#if NET5_0_OR_GREATER || NETSTANDARD2_1");
                 builder.AppendLine($"public static ReadOnlySpan<byte> {csFinalName} => new byte[]");
+                builder.AppendLine("#else");
+                builder.AppendLine($"public static readonly byte[] {csFinalName} = new byte[]");
+                builder.AppendLine("#endif");
                 builder.OpenBlock();
                 builder.AppendLine($"{string.Join(", ", spv.ToArray().Select(b => b.ToString(CultureInfo.InvariantCulture)))}");
                 builder.Unindent();

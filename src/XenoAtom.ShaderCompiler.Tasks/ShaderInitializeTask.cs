@@ -72,9 +72,6 @@ namespace XenoAtom.ShaderCompiler.Tasks
 
         [Output]
         public ITaskItem[]? ContentFiles { get; set; }
-        
-        [Output]
-        public ITaskItem[]? CSharpFiles { get; set; }
 
         public override bool Execute()
         {
@@ -170,24 +167,24 @@ namespace XenoAtom.ShaderCompiler.Tasks
                     OutputSpvPath = relativeSpvPath,
                     OutputDepsPath = relativeDepsPath,
 
-                    OutputKind = ToStringOpt(item.GetMetadata(nameof(ShaderCompilerOption_output_kind))),
+                    OutputKind = ToStringOpt(inputItem.GetMetadata(nameof(ShaderCompilerOption_output_kind))),
 
-                    Description = ToStringOpt(item.GetMetadata(nameof(ShaderCompilerConstants.ShaderCompilerOption_description))),
-                    StageSelection = ToStringOpt(item.GetMetadata(nameof(ShaderCompilerOption_stage_selection))),
-                    EntryPoint = ToStringOpt(item.GetMetadata(nameof(ShaderCompilerOption_entry_point))),
-                    SourceLanguage = ToStringOpt(item.GetMetadata(nameof(ShaderCompilerOption_source_language))),
-                    OptimizationLevel = ToStringOpt(item.GetMetadata(nameof(ShaderCompilerOption_optimization_level))),
-                    InvertY = ToBool(item.GetMetadata(nameof(ShaderCompilerOption_invert_y))),
-                    TargetEnv = ToStringOpt(item.GetMetadata(nameof(ShaderCompilerOption_target_env))),
-                    TargetSpv = ToStringOpt(item.GetMetadata(nameof(ShaderCompilerOption_target_spv))),
-                    GeneratedDebug = ToBool(item.GetMetadata(nameof(ShaderCompilerOption_generate_debug))),
-                    Hlsl16BitTypes = ToBool(item.GetMetadata(nameof(ShaderCompilerOption_hlsl_16bit_types))),
-                    HlslOffsets = ToBool(item.GetMetadata(nameof(ShaderCompilerOption_hlsl_offsets))),
-                    HlslFunctionality1 = ToBool(item.GetMetadata(nameof(ShaderCompilerOption_hlsl_functionality1))),
-                    AutoMapLocations = ToBool(item.GetMetadata(nameof(ShaderCompilerOption_auto_map_locations))),
-                    AutoBindUniforms = ToBool(item.GetMetadata(nameof(ShaderCompilerOption_auto_bind_uniforms))),
-                    HlslIomap = ToBool(item.GetMetadata(nameof(ShaderCompilerOption_hlsl_iomap))),
-                    Defines = ToStringOpt(item.GetMetadata(nameof(ShaderCompilerOption_defines))),
+                    Description = ToStringOpt(inputItem.GetMetadata(nameof(ShaderCompilerConstants.ShaderCompilerOption_description))),
+                    StageSelection = ToStringOpt(inputItem.GetMetadata(nameof(ShaderCompilerOption_stage_selection))),
+                    EntryPoint = ToStringOpt(inputItem.GetMetadata(nameof(ShaderCompilerOption_entry_point))),
+                    SourceLanguage = ToStringOpt(inputItem.GetMetadata(nameof(ShaderCompilerOption_source_language))),
+                    OptimizationLevel = ToStringOpt(inputItem.GetMetadata(nameof(ShaderCompilerOption_optimization_level))),
+                    InvertY = ToBool(inputItem.GetMetadata(nameof(ShaderCompilerOption_invert_y))),
+                    TargetEnv = ToStringOpt(inputItem.GetMetadata(nameof(ShaderCompilerOption_target_env))),
+                    TargetSpv = ToStringOpt(inputItem.GetMetadata(nameof(ShaderCompilerOption_target_spv))),
+                    GeneratedDebug = ToBool(inputItem.GetMetadata(nameof(ShaderCompilerOption_generate_debug))),
+                    Hlsl16BitTypes = ToBool(inputItem.GetMetadata(nameof(ShaderCompilerOption_hlsl_16bit_types))),
+                    HlslOffsets = ToBool(inputItem.GetMetadata(nameof(ShaderCompilerOption_hlsl_offsets))),
+                    HlslFunctionality1 = ToBool(inputItem.GetMetadata(nameof(ShaderCompilerOption_hlsl_functionality1))),
+                    AutoMapLocations = ToBool(inputItem.GetMetadata(nameof(ShaderCompilerOption_auto_map_locations))),
+                    AutoBindUniforms = ToBool(inputItem.GetMetadata(nameof(ShaderCompilerOption_auto_bind_uniforms))),
+                    HlslIomap = ToBool(inputItem.GetMetadata(nameof(ShaderCompilerOption_hlsl_iomap))),
+                    Defines = ToStringOpt(inputItem.GetMetadata(nameof(ShaderCompilerOption_defines))),
                 };
 
                 var outputKind = baseOutputKind;

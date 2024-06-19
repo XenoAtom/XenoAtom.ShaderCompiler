@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ShaderCompile Update="Test.vert.hlsl">
+      <ShaderCompilerOption_description>This is a custom description of this shader.</ShaderCompilerOption_description>
+    </ShaderCompile>
+  </ItemGroup>
+</Project>
