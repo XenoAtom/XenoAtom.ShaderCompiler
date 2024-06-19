@@ -24,6 +24,7 @@ namespace XenoAtom.ShaderCompiler
         public const string ShaderCompilerGlobalOption_class_name = "class-name";
 
         // Global and Per file options
+        public const string ShaderCompilerOption_description = "description";
         public const string ShaderCompilerOption_output_kind = "output-kind";
         public const string ShaderCompilerOption_stage_selection = "stage-selection";
         public const string ShaderCompilerOption_entry_point = "entry-point";

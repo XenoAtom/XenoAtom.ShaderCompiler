@@ -18,4 +18,6 @@ public sealed class ShaderFile : ShaderFileOptions
     public string? OutputDepsPath { get; set; }
 
     public string? OutputCSharpPath { get; set; }
+
+    public string? Description { get; set; }
 }

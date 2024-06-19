@@ -173,6 +173,7 @@ namespace XenoAtom.ShaderCompiler.Tasks
 
                     OutputKind = ToStringOpt(item.GetMetadata(nameof(ShaderCompilerOption_output_kind))),
 
+                    Description = ToStringOpt(item.GetMetadata(nameof(ShaderCompilerConstants.ShaderCompilerOption_description))),
                     StageSelection = ToStringOpt(item.GetMetadata(nameof(ShaderCompilerOption_stage_selection))),
                     EntryPoint = ToStringOpt(item.GetMetadata(nameof(ShaderCompilerOption_entry_point))),
                     SourceLanguage = ToStringOpt(item.GetMetadata(nameof(ShaderCompilerOption_source_language))),

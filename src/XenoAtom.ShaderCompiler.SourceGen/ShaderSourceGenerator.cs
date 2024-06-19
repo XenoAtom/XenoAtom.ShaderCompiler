@@ -7,8 +7,6 @@ using System.Threading;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 
-#pragma warning disable RS1035
-
 namespace XenoAtom.ShaderCompiler.SourceGen
 {
     [Generator(LanguageNames.CSharp)]
@@ -43,16 +41,8 @@ namespace XenoAtom.ShaderCompiler.SourceGen
                             string.Equals(sourceGenEnabled, "true", StringComparison.OrdinalIgnoreCase) &&
                             options.TryGetValue(SourceRelativeCSharpFile, out var csRelativeFilePath) && !string.IsNullOrEmpty(csRelativeFilePath))
                         {
-                            string text;
-                            var csFilePath = additionalText.Path;
-                            if (!string.IsNullOrEmpty(csFilePath) && File.Exists(csFilePath))
-                            {
-                                text = File.ReadAllText(csFilePath);
-                            }
-                            else
-                            {
-                                text = ShaderCompilerHelper.GenerateCSharpFile(Array.Empty<byte>(), csRelativeFilePath, csNamespace, csClassName);
-                            }
+                            var sourceText = additionalText.GetText();
+                            var text = sourceText != null ? sourceText.ToString() : ShaderCompilerHelper.GenerateCSharpFile(Array.Empty<byte>(), csRelativeFilePath, csNamespace, csClassName, null);
                             
                             return (csRelativeFilePath, text);
                         }

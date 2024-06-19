@@ -25,10 +25,14 @@ namespace XenoAtom.ShaderCompiler
         [JsonPropertyName("output-csharp-path")]
         public string? OutputCsPath { get; set; }
 
+        [JsonPropertyName("description")]
+        public string? Description { get; set; }
+
 #if SHADER_COMPILER_RUNTIME
         public override ShaderFile ToRuntime()
         {
             var shaderFile = (ShaderFile)base.ToRuntime();
+            shaderFile.Description = Description;
             shaderFile.OutputSpvPath = OutputSpvPath;
             shaderFile.OutputDepsPath = OutputDepsPath;
             shaderFile.OutputCSharpPath = OutputCsPath;

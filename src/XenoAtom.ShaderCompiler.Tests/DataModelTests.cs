@@ -2,7 +2,6 @@ using System.IO.Hashing;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using XenoAtom.Interop;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace XenoAtom.ShaderCompiler.Tests;
 
@@ -12,38 +11,7 @@ public class DataModelTests : VerifyBase
     [TestMethod]
     public async Task TestSimple()
     {
-        var options = new JsonShaderGlobalOptions();
-
-        options.MaxThreadCount = "4";
-        options.CacheDirectory = "cache";
-        options.CacheCSharpDirectory = "cache_cs";
-        options.RootNamespace = "root";
-        options.ClassName = "class";
-        options.IncludeDirectories.Add("include1");
-        options.GenerateDepsFile = true;
-        options.InputFiles.Add(new JsonShaderFile()
-            {
-                StageSelection = "default",
-                EntryPoint = "main",
-                SourceLanguage = "hlsl",
-                OptimizationLevel = "Os",
-                InvertY = true,
-                TargetEnv = "vulkan1.0",
-                ShaderStage = "vertex",
-                TargetSpv = "spv1.0",
-                GeneratedDebug = true,
-                Hlsl16BitTypes = true,
-                HlslOffsets = true,
-                HlslFunctionality1 = true,
-                AutoMapLocations = true,
-                AutoBindUniforms = true,
-                HlslIomap = true,
-                InputFilePath = "helloworld.hlsl",
-                OutputDepsPath = "helloworld.deps",
-                OutputSpvPath = "helloworld.spv",
-                Defines = "MY_DEFINE=1;MY_DEFINE2=",
-            }
-        );
+        var options = CreateTestGlobalOptions();
 
         var sourceGenOptions = new JsonSerializerOptions
         {
@@ -82,9 +50,8 @@ public class DataModelTests : VerifyBase
         Assert.AreNotEqual(hash, hash3);
     }
 
-
     [TestMethod]
-    public async Task TestMerge()
+    public void TestMerge()
     {
         var options = CreateTestGlobalOptions();
         var shaderFile1 = new ShaderFile("input.hlsl")
@@ -138,6 +105,7 @@ public class DataModelTests : VerifyBase
             {
                 StageSelection = "default",
                 EntryPoint = "main",
+                Description = "This is a description",
                 SourceLanguage = "hlsl",
                 OptimizationLevel = "Os",
                 InvertY = true,

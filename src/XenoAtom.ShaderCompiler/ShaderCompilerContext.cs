@@ -440,7 +440,7 @@ public unsafe partial class ShaderCompilerContext : IDisposable
 
                     if (csFileToGenerate != null)
                     {
-                        var csharpContent = ShaderCompilerHelper.GenerateCSharpFile(buffer, shaderFile.OutputCSharpPath!, _app.RootNamespace ?? "", _app.ClassName ?? "CompiledShaders");
+                        var csharpContent = ShaderCompilerHelper.GenerateCSharpFile(buffer, shaderFile.OutputCSharpPath!, _app.RootNamespace ?? "", _app.ClassName ?? "CompiledShaders", shaderFile.Description);
 
                         var csharpDirectory = Path.GetDirectoryName(csFileToGenerate);
                         if (!string.IsNullOrEmpty(csharpDirectory) && !Directory.Exists(csharpDirectory))

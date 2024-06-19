@@ -15,7 +15,7 @@ namespace XenoAtom.ShaderCompiler
     {
         private static readonly Regex RegexMatchNonIdentifierCharacters = new(@"[^\w]+", RegexOptions.Compiled);
 
-        public static string GenerateCSharpFile(ReadOnlySpan<byte> spv, string csRelativeFilePath, string csNamespace, string csClassName)
+        public static string GenerateCSharpFile(ReadOnlySpan<byte> spv, string csRelativeFilePath, string csNamespace, string csClassName, string? description)
         {
             var csNames = csRelativeFilePath.Split(new[] { '/', '\\' }, StringSplitOptions.RemoveEmptyEntries);
             csNames[^1] = Path.GetFileNameWithoutExtension(csNames[^1]); // Remove .cs extension
@@ -38,6 +38,19 @@ namespace XenoAtom.ShaderCompiler
                 builder.OpenBlock();
                 for (int i = 0; i < csNames.Length - 1; i++)
                 {
+                    // Append the description
+                    if (description != null)
+                    {
+                        var descriptionLines = description.Split(["\r\n", "\r", "\n"], StringSplitOptions.RemoveEmptyEntries);
+
+                        builder.AppendLine("/// <summary>");
+                        foreach (var descriptionLine in descriptionLines)
+                        {
+                            builder.AppendLine($"/// {descriptionLine}");
+                        }
+                        builder.AppendLine("/// </summary>");
+                    }
+
                     builder.AppendLine($"public static partial class {csNames[i]}");
                     builder.OpenBlock();
                 }
