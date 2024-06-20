@@ -19,7 +19,7 @@
     <PackageTags>tag1;tag2;tag3</PackageTags>
     <PackageReadmeFile>readme.md</PackageReadmeFile>
     <PackageIcon>XenoAtom.ShaderCompiler.png</PackageIcon>
-    <PackageProjectUrl>https://github.com/xoofx/XenoAtom.ShaderCompiler</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/XenoAtom/XenoAtom.ShaderCompiler</PackageProjectUrl>
     <PackageLicenseExpression>BSD-2-Clause</PackageLicenseExpression>
     <!--Add support for sourcelink-->
     <PublishRepositoryUrl>true</PublishRepositoryUrl>

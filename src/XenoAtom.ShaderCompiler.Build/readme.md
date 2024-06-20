@@ -37,7 +37,7 @@ namespace HelloWorld
 
 ## 📖 User Guide
 
-For more details on how to use XenoAtom.ShaderCompiler, please visit the [user guide](https://github.com/xoofx/XenoAtom.ShaderCompiler/blob/main/doc/readme.md).
+For more details on how to use XenoAtom.ShaderCompiler, please visit the [user guide](https://github.com/XenoAtom/XenoAtom.ShaderCompiler/blob/main/doc/readme.md).
 
 ## 🪪 License
 

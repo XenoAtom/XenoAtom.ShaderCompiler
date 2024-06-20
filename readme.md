@@ -1,6 +1,6 @@
-# XenoAtom.ShaderCompiler [![Build Status](https://github.com/xoofx/XenoAtom.ShaderCompiler/workflows/ci/badge.svg?branch=main)](https://github.com/xoofx/XenoAtom.ShaderCompiler/actions) [![NuGet](https://img.shields.io/nuget/v/XenoAtom.ShaderCompiler.svg)](https://www.nuget.org/packages/XenoAtom.ShaderCompiler/)
+# XenoAtom.ShaderCompiler [![Build Status](https://github.com/XenoAtom/XenoAtom.ShaderCompiler/workflows/ci/badge.svg?branch=main)](https://github.com/XenoAtom/XenoAtom.ShaderCompiler/actions) [![NuGet](https://img.shields.io/nuget/v/XenoAtom.ShaderCompiler.svg)](https://www.nuget.org/packages/XenoAtom.ShaderCompiler/)
 
-<img align="right" width="160px" height="160px" src="https://raw.githubusercontent.com/xoofx/XenoAtom.ShaderCompiler/main/img/XenoAtom.ShaderCompiler.png">
+<img align="right" width="160px" height="160px" src="https://raw.githubusercontent.com/XenoAtom/XenoAtom.ShaderCompiler/main/img/XenoAtom.ShaderCompiler.png">
 
 This project provides:
 
@@ -22,7 +22,7 @@ This project provides:
 
 ## 📖 User Guide
 
-For more details on how to use XenoAtom.ShaderCompiler, please visit the [user guide](https://github.com/xoofx/XenoAtom.ShaderCompiler/blob/main/doc/readme.md).
+For more details on how to use XenoAtom.ShaderCompiler, please visit the [user guide](https://github.com/XenoAtom/XenoAtom.ShaderCompiler/blob/main/doc/readme.md).
 
 ## 🪪 License
 
