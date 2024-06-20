@@ -157,7 +157,7 @@ For HLSL compilation, this option is on by default."
 
   <BoolProperty
     Name="ShaderCompilerOption_hlsl_offsets"
-    Description="Use HLSL packing rules instead of GLSL rules when determining offsets of members of blocks. This option is always on when compiling for HLSL."
+    Description="Use HLSL packing rules instead of GLSL rules when determining offsets of members of blocks. This option is always on when compiling for HLSL. Always on for HLSL."
     DisplayName="HLSL Offsets"
     Category="Shader"
     Visible="True" />
