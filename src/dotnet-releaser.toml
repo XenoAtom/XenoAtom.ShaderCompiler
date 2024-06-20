@@ -6,5 +6,3 @@ project = "XenoAtom.ShaderCompiler.sln"
 [github]
 user = "XenoAtom"
 repo = "XenoAtom.ShaderCompiler"
-[changelog]
-publish = false
