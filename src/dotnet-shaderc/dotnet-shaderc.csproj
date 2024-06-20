@@ -12,11 +12,11 @@
     <IsPackable>true</IsPackable>
     <PackAsTool>true</PackAsTool>
 
-    <Description>This is a default project description</Description>
+    <Description>This package is a command line tool similar to glslc to compile GLSL/HLSL shader files to SPIR-V binary files.</Description>
     <Copyright>Alexandre Mutel</Copyright>
     <NeutralLanguage>en-US</NeutralLanguage>
     <Authors>Alexandre Mutel</Authors>
-    <PackageTags>tag1;tag2;tag3</PackageTags>
+    <PackageTags>glslc;shaderc;glsl;hlsl;spirv;vulkan;opengl</PackageTags>
     <PackageReadmeFile>readme.md</PackageReadmeFile>
     <PackageIcon>XenoAtom.ShaderCompiler.png</PackageIcon>
     <PackageProjectUrl>https://github.com/XenoAtom/XenoAtom.ShaderCompiler</PackageProjectUrl>

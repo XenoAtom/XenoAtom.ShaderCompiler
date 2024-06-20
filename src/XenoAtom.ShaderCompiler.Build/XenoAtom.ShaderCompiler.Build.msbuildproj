@@ -6,7 +6,7 @@
   
   <PropertyGroup>
     <PackageId>XenoAtom.ShaderCompiler.Build</PackageId>
-    <Description>Package providing an integration of shaderc compiler into MSBuild for compiling all your GLSL/HLSL files to SPIR-V.</Description>
+    <Description>This package provides an integration of shaderc compiler into MSBuild for compiling all your GLSL/HLSL shader files to SPIR-V binary files.</Description>
     <Copyright>Alexandre Mutel</Copyright>
     <NeutralLanguage>en-US</NeutralLanguage>
     <Authors>Alexandre Mutel</Authors>
