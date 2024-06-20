@@ -1,4 +1,4 @@
-# XenoATom.ShaderCompiler.Build
+# XenoATom.ShaderCompiler.Build [![ci](https://github.com/XenoAtom/XenoAtom.ShaderCompiler/actions/workflows/ci.yml/badge.svg)](https://github.com/XenoAtom/XenoAtom.ShaderCompiler/actions/workflows/ci.yml)
 
 This package allows to automatically compile all your `HLSL`/`GLSL` files in your MSBuild projects to SPIR-V binaries.
 

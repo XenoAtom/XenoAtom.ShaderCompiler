@@ -1,4 +1,4 @@
-# XenoAtom.ShaderCompiler [![Build Status](https://github.com/XenoAtom/XenoAtom.ShaderCompiler/workflows/ci/badge.svg?branch=main)](https://github.com/XenoAtom/XenoAtom.ShaderCompiler/actions)
+# XenoAtom.ShaderCompiler [![ci](https://github.com/XenoAtom/XenoAtom.ShaderCompiler/actions/workflows/ci.yml/badge.svg)](https://github.com/XenoAtom/XenoAtom.ShaderCompiler/actions/workflows/ci.yml)
 
 <img align="right" width="160px" height="160px" src="https://raw.githubusercontent.com/XenoAtom/XenoAtom.ShaderCompiler/main/img/XenoAtom.ShaderCompiler.png">
 
