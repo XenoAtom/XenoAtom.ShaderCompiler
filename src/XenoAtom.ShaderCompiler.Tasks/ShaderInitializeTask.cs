@@ -149,7 +149,10 @@ namespace XenoAtom.ShaderCompiler.Tasks
                 var inputItem = InputShaderFiles[i];
                 var sourceShaderFile = inputItem.GetMetadata("FullPath");
 
-                var relativeOutputPath = inputItem.GetMetadata("ShaderCompile_RelativePathCSharp");
+                var relativeOutputPath = string.IsNullOrEmpty(inputItem.GetMetadata("Link"))
+                    ? $"{inputItem.GetMetadata("RelativeDir")}{inputItem.GetMetadata("Filename")}{inputItem.GetMetadata("Extension")}"
+                    : inputItem.GetMetadata("Link");
+
                 var relativeDepsPath = $"{relativeOutputPath}.deps";
                 var relativeSpvPath = $"{relativeOutputPath}.spv";
                 var depsPath = Path.Combine(cacheDirectory, relativeDepsPath);
@@ -197,7 +200,7 @@ namespace XenoAtom.ShaderCompiler.Tasks
 
                     if (isSourceGenerate)
                     {
-                        var relativeCSharpPath = $"{relativeOutputPath}.cs";
+                        var relativeCSharpPath = inputItem.GetMetadata("ShaderCompile_RelativePathCSharp");
                         shaderFile.OutputCsPath = relativeCSharpPath;
                     }
                 }
