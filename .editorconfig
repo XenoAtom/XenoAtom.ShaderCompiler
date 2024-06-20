@@ -64,6 +64,8 @@ indent_size = 2
 # Txt/Markdown Files
 [*.{md,txt}]
 trim_trailing_whitespace = false
+indent_style = space
+indent_size = 2
 
 # Web Files
 [*.{htm,html,js,ts,css,scss,less}]

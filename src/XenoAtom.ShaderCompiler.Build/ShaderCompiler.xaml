@@ -109,7 +109,7 @@
     Name="ShaderCompilerOption_target_env"
     DisplayName="SPIR-V Target"
     Category="Shader"
-    Description="Specifies the SPIR-V language semantics.">
+    Description="Specifies the SPIR-V language semantics. The default is `vulkan1.0`.">
     <EnumValue Name="vulkan" DisplayName="Vulkan" />
     <EnumValue Name="vulkan1.0" DisplayName="Vulkan 1.0" />
     <EnumValue Name="vulkan1.1" DisplayName="Vulkan 1.1" />
