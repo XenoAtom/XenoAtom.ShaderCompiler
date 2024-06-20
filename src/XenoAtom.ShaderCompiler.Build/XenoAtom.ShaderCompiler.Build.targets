@@ -73,7 +73,7 @@
     <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="ShaderCompilerOption_output_kind"/>
 
     <ShaderCompile Update="@(ShaderCompile)">
-      <ShaderCompile_RelativePathCSharp>%(RelativeDir)%(Filename)%(Extension).cs</ShaderCompile_RelativePathCSharp>
+      <ShaderCompile_RelativePathCSharp>$([MSBuild]::ValueOrDefault('%(Link)', '%(RelativeDir)%(Filename)%(Extension).cs'))</ShaderCompile_RelativePathCSharp>
       <ShaderCompilerOption_output_kind>$([MSBuild]::ValueOrDefault('%(ShaderCompilerOption_output_kind)', '$(ShaderCompilerOption_output_kind)'))</ShaderCompilerOption_output_kind>
     </ShaderCompile>
 

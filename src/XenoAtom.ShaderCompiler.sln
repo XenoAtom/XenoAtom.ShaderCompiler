@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XenoAtom.ShaderCompiler", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XenoAtom.ShaderCompiler.Tests", "XenoAtom.ShaderCompiler.Tests\XenoAtom.ShaderCompiler.Tests.csproj", "{6FA8E662-F920-44CE-8FBA-ECCD160AFD54}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BBC4B16D-083F-47E6-BFAE-9064E600F230}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "00-Global", "00-Global", "{BBC4B16D-083F-47E6-BFAE-9064E600F230}"
 	ProjectSection(SolutionItems) = preProject
 		..\.editorconfig = ..\.editorconfig
 		..\.gitattributes = ..\.gitattributes
@@ -27,7 +27,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XenoAtom.ShaderCompiler.Tas
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XenoAtom.ShaderCompiler.SourceGen", "XenoAtom.ShaderCompiler.SourceGen\XenoAtom.ShaderCompiler.SourceGen.csproj", "{D6E8F1BC-1F19-4A9B-B82E-6D8D491DCD35}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XenoAtom.ShaderCompiler.Bench", "XenoAtom.ShaderCompiler.Bench\XenoAtom.ShaderCompiler.Bench.csproj", "{A74576D6-10DA-448D-ADE9-2F92AF409A85}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XenoAtom.ShaderCompiler.Bench", "XenoAtom.ShaderCompiler.Bench\XenoAtom.ShaderCompiler.Bench.csproj", "{A74576D6-10DA-448D-ADE9-2F92AF409A85}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "10-Documentation", "10-Documentation", "{A99C41AA-D7DE-4E7B-B6B3-1046EADB5ACF}"
+	ProjectSection(SolutionItems) = preProject
+		..\doc\readme.md = ..\doc\readme.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

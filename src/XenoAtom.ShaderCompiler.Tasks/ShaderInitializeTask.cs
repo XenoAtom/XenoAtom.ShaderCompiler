@@ -148,7 +148,8 @@ namespace XenoAtom.ShaderCompiler.Tasks
             {
                 var inputItem = InputShaderFiles[i];
                 var sourceShaderFile = inputItem.GetMetadata("FullPath");
-                var relativeOutputPath = $"{Path.Combine(inputItem.GetMetadata("RelativeDir"), inputItem.GetMetadata("Filename"))}{inputItem.GetMetadata("Extension")}";
+
+                var relativeOutputPath = inputItem.GetMetadata("ShaderCompile_RelativePathCSharp");
                 var relativeDepsPath = $"{relativeOutputPath}.deps";
                 var relativeSpvPath = $"{relativeOutputPath}.spv";
                 var depsPath = Path.Combine(cacheDirectory, relativeDepsPath);
