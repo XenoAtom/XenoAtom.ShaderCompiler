@@ -1,12 +1,12 @@
-# XenoAtom.ShaderCompiler [![Build Status](https://github.com/XenoAtom/XenoAtom.ShaderCompiler/workflows/ci/badge.svg?branch=main)](https://github.com/XenoAtom/XenoAtom.ShaderCompiler/actions) [![NuGet](https://img.shields.io/nuget/v/XenoAtom.ShaderCompiler.svg)](https://www.nuget.org/packages/XenoAtom.ShaderCompiler/)
+# XenoAtom.ShaderCompiler [![Build Status](https://github.com/XenoAtom/XenoAtom.ShaderCompiler/workflows/ci/badge.svg?branch=main)](https://github.com/XenoAtom/XenoAtom.ShaderCompiler/actions)
 
 <img align="right" width="160px" height="160px" src="https://raw.githubusercontent.com/XenoAtom/XenoAtom.ShaderCompiler/main/img/XenoAtom.ShaderCompiler.png">
 
 This project provides:
 
-- A library `XenoAtom.ShaderCompiler` that exposes higher-level integration of [shaderc](https://github.com/google/shaderc) to compile HLSL/GLSL shaders.
-- A tool `dotnet-shaderc` the equivalent of [`glslc`](https://github.com/google/shaderc/tree/main/glslc) that can be installed on any machine that has the .NET 8 SDK
-- A MSBuild integration via `XenoAtom.ShaderCompiler.Build` that allows to compile shaders to SPIR-V binary files, embed them directly in C# (via a built-in Source Generator) or generates `tar`/`tar.gz` files.
+- A library `XenoAtom.ShaderCompiler` that exposes higher-level integration of [shaderc](https://github.com/google/shaderc) to compile HLSL/GLSL shaders. [![NuGet](https://img.shields.io/nuget/v/XenoAtom.ShaderCompiler.svg)](https://www.nuget.org/packages/XenoAtom.ShaderCompiler/)
+- A tool `dotnet-shaderc` the equivalent of [`glslc`](https://github.com/google/shaderc/tree/main/glslc) that can be installed on any machine that has the .NET 8 SDK  [![NuGet](https://img.shields.io/nuget/v/dotnet-shaderc.svg)](https://www.nuget.org/packages/dotnet-shaderc/)
+- A MSBuild integration via `XenoAtom.ShaderCompiler.Build` that allows to compile shaders to SPIR-V binary files, embed them directly in C# (via a built-in Source Generator) or generates `tar`/`tar.gz` files.  [![NuGet](https://img.shields.io/nuget/v/XenoAtom.ShaderCompiler.Build.svg)](https://www.nuget.org/packages/XenoAtom.ShaderCompiler.Build/)
 
 ## ✨ Features
 
