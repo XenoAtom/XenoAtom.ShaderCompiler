@@ -68,6 +68,7 @@ This documentation is covering:
 | `ShaderCompilerGlobalOption_root_namespace`    | Defines the namespace used for the C# source generator.  | `$(RootNamespace)`
 | `ShaderCompilerGlobalOption_class_name`        | Defines the name of the generated C# class that will contain embedded compiled shaders. | `CompiledShaders`
 | `EnableDefaultShaderCompileItems`              | A boolean indicating whether or not to create automatically `<ShaderCompile ...>` entries for known file extensions (e.g `.vert`, `.vert.hlsl`...) | `true`
+| `ShaderCompilerGlobalOption_generate_hlsl_tools_config` | Generates a `shadertoolsconfig.json` used by the [HLSL Tools Extension](https://github.com/tgjones/HlslTools) for Visual Studio to allow defines and include directories to be transferred from MSBuild project to this file | `false`
 
 For example, you can define these properties in your MSBuild project like this:
 

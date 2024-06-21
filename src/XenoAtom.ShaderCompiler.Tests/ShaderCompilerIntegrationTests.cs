@@ -7,9 +7,12 @@ using System.IO.Compression;
 using System.Reflection;
 using System.Runtime.Loader;
 using System.Text;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 using Microsoft.Build.Execution;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Locator;
+using XenoAtom.ShaderCompiler.Tasks;
 
 namespace XenoAtom.ShaderCompiler.Tests;
 
@@ -174,6 +177,12 @@ public class ShaderCompilerIntegrationTests
             Assert.IsNotNull(belowType, "The type `Below` was not found in the compiled shaders");
             shaderLoaderContext.AssertShader(belowType, "Test_frag_hlsl");
         }
+
+        // Check the HLSLToolsConfig file
+        var generatedHlslToolsConfig = project.LoadHlslToolsConfig();
+        Assert.IsNotNull(generatedHlslToolsConfig, "The generatedHLSLToolsConfig should not be null");
+        Assert.AreEqual(1, generatedHlslToolsConfig.HlslAdditionalIncludeDirectories.Count, "Invalid number of additional include directories");
+        Assert.AreEqual("../Shared", generatedHlslToolsConfig.HlslAdditionalIncludeDirectories[0], "Invalid additional include directory");
     }
 
     [TestMethod]
@@ -188,8 +197,14 @@ public class ShaderCompilerIntegrationTests
     {
         var project = _build.Load("Project007_WithDefine");
         project.BuildAndCheck(TaskExecutedWithShaderAndCSharpCompile);
+
+        // Check the HLSLToolsConfig file
+        var generatedHlslToolsConfig = project.LoadHlslToolsConfig();
+        Assert.IsNotNull(generatedHlslToolsConfig, "The generatedHLSLToolsConfig should not be null");
+        Assert.AreEqual(1, generatedHlslToolsConfig.HlslPreprocessorDefinitions.Count, "Invalid number of additional include directories");
+        Assert.IsTrue(generatedHlslToolsConfig.HlslPreprocessorDefinitions.ContainsKey("TEST_NO_INCLUDE"), "The key `TEST_NO_INCLUDE` was not found");
     }
-    
+
     [TestMethod]
     public void Test_Project004_InvalidShader()
     {
@@ -467,6 +482,25 @@ public class ShaderCompilerIntegrationTests
         }
 
         public string ProjectFolder => _projectFolder;
+
+        public JsonHlslToolsConfig LoadHlslToolsConfig()
+        {
+            var generatedHLSLToolsConfigFile = Path.Combine(_projectFolder, "shadertoolsconfig.json");
+            Assert.IsTrue(File.Exists(generatedHLSLToolsConfigFile), $"The file `{generatedHLSLToolsConfigFile}` was not found");
+
+            var generatedHLSLToolsConfigText = File.ReadAllText(generatedHLSLToolsConfigFile);
+            var sourceGenOptions = new JsonSerializerOptions
+            {
+                TypeInfoResolver = JsonSerializerContextForHlslToolsConfig.Default,
+                WriteIndented = true,
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+            };
+
+            var generatedHLSLToolsConfig = JsonSerializer.Deserialize<JsonHlslToolsConfig>(generatedHLSLToolsConfigText, sourceGenOptions);
+            Assert.IsNotNull(generatedHLSLToolsConfig, "The generatedHLSLToolsConfig should not be null");
+            return generatedHLSLToolsConfig;
+        }
+
 
         public string GetBinaryFolder(string configuration = "Debug")
         {

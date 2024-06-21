@@ -20,6 +20,8 @@
     <Content Include="AppTests\**\*.*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+
+    <Compile Include="..\XenoAtom.ShaderCompiler.Tasks\JsonHlslToolsConfig.cs" Link="JsonHlslToolsConfig.cs" />
     
     <Content Include="..\XenoAtom.ShaderCompiler.Build\XenoAtom.ShaderCompiler.Build.targets">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

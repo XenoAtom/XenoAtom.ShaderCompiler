@@ -1,5 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <ShaderCompilerOption_defines>TEST_NO_INCLUDE</ShaderCompilerOption_defines>
+    <ShaderCompilerGlobalOption_generate_hlsl_tools_config>true</ShaderCompilerGlobalOption_generate_hlsl_tools_config>
   </PropertyGroup>
 </Project>

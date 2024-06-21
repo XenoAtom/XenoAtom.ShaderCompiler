@@ -32,6 +32,8 @@
     <_ShaderCompilerOutputCSharpDirectory>$(_ShaderCompilerOutputDirectory)cs\</_ShaderCompilerOutputCSharpDirectory>
     <_ShaderCompilerOutputMarkerFile>$(_ShaderCompilerOutputDirectory)ShaderCompiler_output.txt</_ShaderCompilerOutputMarkerFile>
     <_ShaderCompilerOutputBatchFile>$(_ShaderCompilerOutputDirectory)ShaderCompile_input.json</_ShaderCompilerOutputBatchFile>
+
+    <_ShaderCompilerGlobalOption_hlsl_tools_config_file_path>$(ProjectDir)shadertoolsconfig.json</_ShaderCompilerGlobalOption_hlsl_tools_config_file_path>
   </PropertyGroup>
 
   <!-- Setup binaries for test project vs real user project -->
@@ -113,6 +115,9 @@
       ShaderCompilerGlobalOption_include_directory="@(ShaderCompilerGlobalOption_include_directory)"
       ShaderCompilerGlobalOption_root_namespace="$(ShaderCompilerGlobalOption_root_namespace)"
       ShaderCompilerGlobalOption_class_name="$(ShaderCompilerGlobalOption_class_name)"
+      ShaderCompilerGlobalOption_generate_hlsl_tools_config = "$(ShaderCompilerGlobalOption_generate_hlsl_tools_config)"
+      ShaderCompilerGlobalOption_hlsl_tools_config_file_path ="$(_ShaderCompilerGlobalOption_hlsl_tools_config_file_path)"
+
       ShaderCompilerOption_output_kind="$(ShaderCompilerOption_output_kind)"
       ShaderCompilerOption_entry_point = "$(ShaderCompilerOption_entry_point)"
       ShaderCompilerOption_source_language = "$(ShaderCompilerOption_source_language)"

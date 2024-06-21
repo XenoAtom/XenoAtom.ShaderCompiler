@@ -1,4 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <ShaderCompilerGlobalOption_generate_hlsl_tools_config>true</ShaderCompilerGlobalOption_generate_hlsl_tools_config>
+  </PropertyGroup>
   <ItemGroup>
     <ShaderCompilerGlobalOption_include_directory Include="../Shared"/>
   </ItemGroup>

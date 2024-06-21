@@ -33,6 +33,10 @@ namespace XenoAtom.ShaderCompiler.Tasks
 
         public string? ShaderCompilerGlobalOption_class_name { get; set; }
 
+        public bool ShaderCompilerGlobalOption_generate_hlsl_tools_config { get; set; }
+
+        public string? ShaderCompilerGlobalOption_hlsl_tools_config_file_path { get; set; }
+        
         public string? ShaderCompilerOption_output_kind { get; set; }
         
         public string? ShaderCompilerOption_entry_point { get; set;}
@@ -292,7 +296,81 @@ namespace XenoAtom.ShaderCompiler.Tasks
 
             OutputCompiledShaders = outputTasks;
             ContentFiles = contentFiles.ToArray();
+
+            GenerateHlslToolsConfig();
+
             return true;
+        }
+
+        /// <summary>
+        /// Generates the HLSL Tools config file
+        ///
+        /// Readme: https://github.com/tgjones/HlslTools?tab=readme-ov-file#custom-preprocessor-definitions-and-additional-include-directories
+        /// 
+        /// C#: https://github.com/tgjones/HlslTools/blob/3cb3e76a8a5a35daf6f8e6fa5c32da7facf7175a/src/ShaderTools.CodeAnalysis/Options/ConfigFile.cs#L9-L24
+        /// </summary>
+        private void GenerateHlslToolsConfig()
+        {
+            if (!ShaderCompilerGlobalOption_generate_hlsl_tools_config)
+            {
+                return;
+            }
+
+            var hlslToolsConfig = new JsonHlslToolsConfig
+            {
+                Root = true
+            };
+
+            if (ShaderCompilerGlobalOption_include_directory != null)
+            {
+                foreach (var includeDirectory in ShaderCompilerGlobalOption_include_directory)
+                {
+                    hlslToolsConfig.HlslAdditionalIncludeDirectories.Add(includeDirectory.ItemSpec);
+                }
+            }
+
+            if (!string.IsNullOrEmpty(ShaderCompilerOption_defines))
+            {
+                var defines = ShaderCompilerOption_defines!.Split(new[] {';'}, StringSplitOptions.RemoveEmptyEntries);
+                foreach (var define in defines)
+                {
+                    var index = define.IndexOf('=');
+                    if (index > 0)
+                    {
+                        var key = define.Substring(0, index);
+                        var value = define.Substring(index + 1);
+                        hlslToolsConfig.HlslPreprocessorDefinitions[key] = value;
+                    }
+                    else
+                    {
+                        hlslToolsConfig.HlslPreprocessorDefinitions[define] = "1";
+                    }
+                }
+            }
+
+            if (ShaderCompilerGlobalOption_hlsl_tools_config_file_path != null)
+            {
+                var sourceGenOptions = new JsonSerializerOptions
+                {
+                    TypeInfoResolver = JsonSerializerContextForHlslToolsConfig.Default,
+                    WriteIndented = true,
+                    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+                };
+
+                var json = JsonSerializer.Serialize(hlslToolsConfig, sourceGenOptions);
+
+                if (File.Exists(ShaderCompilerGlobalOption_hlsl_tools_config_file_path))
+                {
+                    var previousJson = File.ReadAllText(ShaderCompilerGlobalOption_hlsl_tools_config_file_path);
+                    // No need to update the file if it hasn't changed
+                    if (json == previousJson)
+                    {
+                        return;
+                    }
+                }
+                
+                File.WriteAllText(ShaderCompilerGlobalOption_hlsl_tools_config_file_path, json);
+            }
         }
 
         private static string? ToStringOpt(string? value) => string.IsNullOrEmpty(value) ? null : value;
