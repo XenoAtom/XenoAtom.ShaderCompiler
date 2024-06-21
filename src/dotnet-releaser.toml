@@ -6,3 +6,5 @@ project = "XenoAtom.ShaderCompiler.sln"
 [github]
 user = "XenoAtom"
 repo = "XenoAtom.ShaderCompiler"
+[changelog]
+owners = ["xoofx"] # To avoid to be mentioned in the changelog
