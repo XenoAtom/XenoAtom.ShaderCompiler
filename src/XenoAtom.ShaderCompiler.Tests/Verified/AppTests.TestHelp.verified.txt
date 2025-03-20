@@ -26,7 +26,7 @@ Language and Mode Selection Options:
                                raygen, tesscontrol, tesseval, vertex.
       --target-env=<value>   The target environment <value> for the shader.
                                Possible values are: opengl, opengl4.5, vulkan,
-                               vulkan1.0, vulkan1.1, vulkan1.2.
+                               vulkan1.0, vulkan1.1, vulkan1.2, vulkan1.3.
       --target-spv=<version> Specify the SPIR-V <version> to be used by the
                                generated module. Possible values are: spv1.0,
                                spv1.1, spv1.2, spv1.3, spv1.4, spv1.5, spv1.6.

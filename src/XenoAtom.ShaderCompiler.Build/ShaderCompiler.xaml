@@ -107,13 +107,14 @@
 
   <EnumProperty
     Name="ShaderCompilerOption_target_env"
-    DisplayName="SPIR-V Target"
+    DisplayName="Vulkan Target"
     Category="Shader"
     Description="Specifies the SPIR-V language semantics. The default is `vulkan1.0`.">
     <EnumValue Name="vulkan" DisplayName="Vulkan" />
     <EnumValue Name="vulkan1.0" DisplayName="Vulkan 1.0" />
     <EnumValue Name="vulkan1.1" DisplayName="Vulkan 1.1" />
     <EnumValue Name="vulkan1.2" DisplayName="Vulkan 1.2" />
+    <EnumValue Name="vulkan1.3" DisplayName="Vulkan 1.3" />
     <EnumValue Name="opengl" DisplayName="OpenGL" />
     <EnumValue Name="opengl4.5" DisplayName="OpenGL 4.5" />
   </EnumProperty>

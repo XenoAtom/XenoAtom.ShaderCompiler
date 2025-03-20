@@ -20,6 +20,7 @@ internal static class ArgumentParser
         { "vulkan1.0", shaderc_env_version.shaderc_env_version_vulkan_1_0 },
         { "vulkan1.1", shaderc_env_version.shaderc_env_version_vulkan_1_1 },
         { "vulkan1.2", shaderc_env_version.shaderc_env_version_vulkan_1_2 },
+        { "vulkan1.3", shaderc_env_version.shaderc_env_version_vulkan_1_3 },
         { "opengl", shaderc_env_version.shaderc_env_version_opengl_4_5 },
         { "opengl4.5", shaderc_env_version.shaderc_env_version_opengl_4_5 },
     };
@@ -32,7 +33,7 @@ internal static class ArgumentParser
         { "spv1.3", shaderc_spirv_version.shaderc_spirv_version_1_3 },
         { "spv1.4", shaderc_spirv_version.shaderc_spirv_version_1_4 },
         { "spv1.5", shaderc_spirv_version.shaderc_spirv_version_1_5 },
-        { "spv1.6", shaderc_spirv_version.shaderc_spirv_version_1_6 },
+        { "spv1.6", shaderc_spirv_version.shaderc_spirv_version_1_6},
     };
 
     private static readonly Dictionary<string, shaderc_shader_kind> ShaderKindMap = new(StringComparer.Ordinal)

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -48,7 +48,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Build" Version="17.10.4" ExcludeAssets="runtime" />
     <PackageReference Include="Microsoft.Build.Locator" Version="1.7.8" />
-    <PackageReference Include="MSTest" Version="3.*" />
+    <PackageReference Include="MSTest" Version="3.6.4" />
     <PackageReference Include="System.IO.Hashing" Version="8.0.0" />
     <PackageReference Include="Verify.MSTest" Version="25.0.3" />
     <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
