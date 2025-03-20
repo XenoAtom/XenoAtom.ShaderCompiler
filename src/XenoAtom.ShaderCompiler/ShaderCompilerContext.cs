@@ -217,14 +217,9 @@ internal unsafe partial class ShaderCompilerContext : IDisposable
                 switch (mergedOptions.TargetEnv.Value)
                 {
                     case shaderc_env_version.shaderc_env_version_vulkan_1_0:
-                        version = (uint)mergedOptions.TargetEnv.Value;
-                        targetEnv = shaderc_target_env.shaderc_target_env_vulkan;
-                        break;
                     case shaderc_env_version.shaderc_env_version_vulkan_1_1:
-                        version = (uint)mergedOptions.TargetEnv.Value;
-                        targetEnv = shaderc_target_env.shaderc_target_env_vulkan;
-                        break;
                     case shaderc_env_version.shaderc_env_version_vulkan_1_2:
+                    case shaderc_env_version.shaderc_env_version_vulkan_1_3:
                         version = (uint)mergedOptions.TargetEnv.Value;
                         targetEnv = shaderc_target_env.shaderc_target_env_vulkan;
                         break;
