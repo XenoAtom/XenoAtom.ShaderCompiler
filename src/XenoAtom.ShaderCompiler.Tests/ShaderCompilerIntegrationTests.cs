@@ -64,7 +64,6 @@ public class ShaderCompilerIntegrationTests
                                        """;
 
     [TestMethod]
-    [Ignore("Something wrong with MSBuild")]
     public void Test_Project001_SingleShader()
     {
         var project = _build.Load("Project001_SingleShader");
@@ -98,7 +97,6 @@ public class ShaderCompilerIntegrationTests
     }
 
     [TestMethod]
-    [Ignore("Something wrong with MSBuild")]
     public void Test_Project002_MultipleShaders()
     {
         var project = _build.Load("Project002_MultipleShaders");
@@ -130,7 +128,6 @@ public class ShaderCompilerIntegrationTests
     }
 
     [TestMethod]
-    [Ignore("Something wrong with MSBuild")]
     public void Test_Project003_ShaderWithIncludes()
     {
         var project = _build.Load("Project003_ShaderWithIncludes");
@@ -166,7 +163,6 @@ public class ShaderCompilerIntegrationTests
     }
 
     [TestMethod]
-    [Ignore("Something wrong with MSBuild")]
     public void Test_Project005_WithIncludeDirectories()
     {
         var project = _build.Load("Project005_WithIncludeDirectories");
@@ -238,7 +234,6 @@ public class ShaderCompilerIntegrationTests
     }
 
     [TestMethod]
-    [Ignore("Something wrong with MSBuild")]
     public void Test_Project009_SimulateIDE()
     {
         var project = _build.Load("Project009_SimulateIDE");
@@ -252,7 +247,6 @@ public class ShaderCompilerIntegrationTests
     }
 
     [TestMethod]
-    [Ignore("Something wrong with MSBuild")]
     public void Test_Project010_CustomNames()
     {
         var project = _build.Load("Project010_CustomNames");
@@ -282,7 +276,6 @@ public class ShaderCompilerIntegrationTests
     }
     
     [TestMethod]
-    [Ignore("Something wrong with MSBuild")]
     public void Test_Project012_MultipleOutputKind()
     {
         var project = _build.Load("Project012_MultipleOutputKind");
